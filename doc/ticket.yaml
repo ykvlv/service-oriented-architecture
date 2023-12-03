@@ -1,0 +1,686 @@
+openapi: 3.0.0
+info:
+  title: Ticket Service API
+  version: 1.0.11
+  description: Веб-сервис для управления билетами.
+
+paths:
+  /events:
+    get:
+      summary: Получить массив событий
+      description: >
+        Возвращает массив событий с поддержкой сортировки, фильтрации и постраничного вывода:<br>
+        <b>id</b> - ИД ивента.<br>
+        <b>name</b> - название ивента.<br>
+        <b>date</b> - дата создания (заполняется автоматически)<br>
+        <b>minAge</b> - минимальный возраст посетителя.<br>
+        <b>ticketCount</b> - количество билетов.<br>
+        <b>description</b> - описание события в текстовой форме.
+      tags:
+        - Events
+      parameters:
+        - name: page
+          in: query
+          description: Номер страницы
+          required: true
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          description: Размер страницы
+          required: true
+          schema:
+            type: integer
+            default: 10
+        - name: sort
+          in: query
+          required: false
+          description: Массив полей, которые используются для сортировки. Знак "-" означает сортировку в порядке убывания. Если запросы и порядок удаления указаны для одного поля (с "-" и без "-"), будет возвращен ответ об ошибке.
+          schema:
+            type: array
+            items:
+              type: string
+              example: -id
+              pattern: '^(id|name|date|minAge|ticketsCount|description|-id|-name|-date|-minAge|-ticketsCount|-description)$'
+          style: deepObject
+          explode: true
+        - name: filter
+          in: query
+          required: false
+          description: Массив полей для фильтрации. Каждый элемент должен содержать имя поля и метод фильтрации в скобках, а также значение, которое будет использоваться для фильтрации. Если тип значения неверен, будет возвращен ответ с ошибкой.
+          schema:
+            type: array
+            items:
+              type: string
+              example: id[eq]=1
+              pattern: '^(id|name|date|minAge|ticketsCount|description)\[(eq|ne|gt|lt|lte|gte)\]=.+$'
+          style: deepObject
+          explode: true
+
+      responses:
+        200:
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+        400:
+          description: Невалидная схема документа или входные данные не верны.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                response:
+                  value:
+                    code: 400
+                    message: "sort: дублирование фильтра id"
+    post:
+      summary: Создать новое событие
+      description: >
+        Создает новое событие. В формате Json опишете добавляемый ивент:<br>
+        <b>name</b> - название ивента.<br>
+        <b>minAge</b> - минимальный возраст посетителя.<br>
+        <b>ticketCount</b> - количество билетов.<br>
+        <b>description</b> - описание события в текстовой форме.
+      tags:
+        - Events
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventDTO'
+      responses:
+        201:
+          description: Событие успешно создано
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        400:
+          description: Невалидная схема документа или входные данные не верны.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                response:
+                  value:
+                    code: 400
+                    message: "minAge: должно быть больше или равен нулю"
+
+  /events/{eventId}:
+    parameters:
+      - name: eventId
+        in: path
+        description: ИД события
+        required: true
+        schema:
+          type: integer
+    get:
+      summary: Получить информацию о событии
+      description: Возвращает информацию о событии по его ИД.
+      tags:
+        - Events
+      responses:
+        200:
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        400:
+          description: Невалидная схема документа или входные данные не верны.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                response:
+                  value:
+                    code: 400
+                    message: "id: должен быть больше или равен нулю"
+
+        404:
+          description: Событие не найдено.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                response:
+                  value:
+                    code: 404
+                    message: "Событие с ИД=1 не найдено"
+    put:
+      summary: Обновить информацию о событии
+      description: >
+        Обновляет информацию о событии по его ИД. В формате Json опишете добавляемый ивент:<br>
+        <b>name</b> - название ивента.<br>
+        <b>minAge</b> - минимальный возраст посетителя.<br>
+        <b>ticketCount</b> - количество билетов.<br>
+        <b>description</b> - описание события в текстовой форме.
+      tags:
+        - Events
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventDTO'
+      responses:
+        200:
+          description: Событие успешно обновлено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        400:
+          description: Невалидная схема документа или входные данные не верны.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                response:
+                  value:
+                    code: 400
+                    message: "minAge: должно быть больше или равен нулю"
+        404:
+          description: Событие не найдено.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                response:
+                  value:
+                    code: 404
+                    message: "Событие с ИД=1 не найдено"
+    delete:
+      summary: Удалить событие
+      description: Удаляет событие по его ИД.
+      tags:
+        - Events
+      responses:
+        204:
+          description: Событие успешно удалено
+        400:
+          description: Невалидная схема документа или входные данные не верны.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                response:
+                  value:
+                    code: 400
+                    message: "id: должно быть больше или равен нулю"
+
+        404:
+          description: Событие не найдено.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                response:
+                  value:
+                    code: 404
+                    message: "Событие с ИД=1 не найдено"
+
+  /tickets:
+    get:
+      summary: Получить массив билетов
+      description: Возвращает массив билетов с поддержкой сортировки, фильтрации и постраничного вывода.
+      tags:
+        - Tickets
+      parameters:
+        - name: page
+          in: query
+          description: Номер страницы
+          required: true
+          schema:
+            default: 0
+            type: integer
+        - name: size
+          in: query
+          description: Размер страницы
+          required: true
+          schema:
+            default: 10
+            type: integer
+        - name: sort
+          in: query
+          required: false
+          description: Массив полей, которые используются для сортировки. Знак "-" означает сортировку в порядке убывания. Если запросы и порядок удаления указаны для одного поля (с "-" и без "-"), будет возвращен ответ об ошибке.
+          schema:
+            type: array
+            items:
+              type: string
+              example: -id
+              pattern: '^(id|name|coordinates.x|coordinates.y|creationDate|price|type|event.id|event.name|event.date|event.minAge|event.ticketsCount|event.description|-id|-name|-coordinates.x|-coordinates.y|-creationDate|-price|-type|-event.id|-event.name|-event.date|-event.minAge|-event.ticketsCount|-event.description)$'
+          style: deepObject
+          explode: true
+        - name: filter
+          in: query
+          required: false
+          description: Массив полей для фильтрации. Каждый элемент должен содержать имя поля и метод фильтрации в скобках, а также значение, которое будет использоваться для фильтрации. Если тип значения неверен, будет возвращен ответ с ошибкой.
+          schema:
+            type: array
+            items:
+              type: string
+              example: id[eq]=1
+              pattern: '^(id|name|creationDate|coordinates\.x|coordinates\.y|price|type|event\.id|event\.name|event\.date|event\.minAge|event\.ticketsCount|event\.description)\[(eq|ne|gt|lt|lte|gte)\]=.+$'
+          style: deepObject
+          explode: true
+
+      responses:
+        200:
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ticket'
+        400:
+          description: Невалидная схема документа или входные данные не верны.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                response:
+                  value:
+                    code: 400
+                    message: "size: должен быть больше 0"
+
+    post:
+      summary: Добавить новый билет
+      description: >
+        Добавляет новый билет в коллекцию. В формате Json опишете добавляемый билет.<br>
+        <b>name</b> - имя билета.<br>
+        <b>(x, y)</b> - координаты.<br>
+        <b>price</b> - стоимость билета.<br>
+        <b>type</b> - один из возможных типов (VIP, USUAL, BUDGETARY, CHEAP). <br>
+        <b>eventId</b> - ID ивента.
+      tags:
+        - Tickets
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TicketDTO'
+      responses:
+        201:
+          description: Билет успешно создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+        400:
+          description: Невалидная схема документа или входные данные не верны.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                response:
+                  value:
+                    code: 400
+                    message: "name: поле должно быть не пустое"
+
+  /tickets/{ticketId}:
+    parameters:
+      - name: ticketId
+        in: path
+        description: ИД билета
+        required: true
+        schema:
+          type: integer
+    get:
+      summary: Получить информацию о билете
+      description: Возвращает информацию о билете по его ИД.
+      tags:
+        - Tickets
+      responses:
+        200:
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+        400:
+          description: Невалидная схема документа или входные данные не верны.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                response:
+                  value:
+                    code: 400
+                    message: "id: должен быть больше или равен 0"
+        404:
+          description: Билет не найден.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                response:
+                  value:
+                    code: 404
+                    message: "Билет с ИД=1 не найден"
+    put:
+      summary: Обновить информацию о билете
+      description: >
+        Обновляет информацию о билете по его ИД. В формате Json опишете добавляемый билет.<br>
+        <b>name</b> - имя билета.<br>
+        <b>(x, y)</b> - координаты.<br>
+        <b>price</b> - стоимость билета.<br>
+        <b>type</b> - один из возможных типов (VIP, USUAL, BUDGETARY, CHEAP). <br>
+        <b>eventId</b> - ID ивента.
+      tags:
+        - Tickets
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TicketDTO'
+      responses:
+        200:
+          description: Билет успешно обновлен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+        400:
+          description: Невалидная схема документа или входные данные не верны.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                response:
+                  value:
+                    code: 400
+                    message: "price: должен быть больше 0"
+        404:
+          description: Билет не найден.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                response:
+                  value:
+                    code: 404
+                    message: "Билет с ИД=1 не найден"
+    delete:
+      summary: Удалить билет
+      description: Удаляет билет по его ИД.
+      tags:
+        - Tickets
+      responses:
+        204:
+          description: Билет успешно удален
+        400:
+          description: Невалидная схема документа или входные данные не верны.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                response:
+                  value:
+                    code: 400
+                    message: "ticketId: должен быть больше 0"
+
+  /tickets/min-type:
+    get:
+      summary: Получить билет с минимальным типом
+      description: Возвращает билет с минимальным значением поля "type".
+      tags:
+        - Tickets
+      responses:
+        200:
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+        404:
+          description: Билет не найден.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                response:
+                  value:
+                    code: 404
+                    message: "Билет по такому запросу не найден"
+
+  /tickets/name:
+    get:
+      summary: Получить билеты по подстроке в имени
+      description: Возвращает массив билетов, у которых поле "name" содержит заданную подстроку.
+      tags:
+        - Tickets
+      parameters:
+        - name: substring
+          in: query
+          description: Подстрока для поиска в имени
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ticket'
+        400:
+          description: Невалидная схема документа или входные данные не верны.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                response:
+                  value:
+                    code: 400
+                    message: "substring: должен быть непустым"
+
+  /tickets/unique-types:
+    get:
+      summary: Получить уникальные типы билетов
+      description: Возвращает массив уникальных значений поля "type" для всех билетов.
+      tags:
+        - Tickets
+      responses:
+        200:
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  example: "VIP"
+
+components:
+  schemas:
+    TicketDTO: # Отдельная схема для создания билета без поля event
+      type: object
+      properties:
+        name:
+          type: string
+          description: Название билета
+        coordinates:
+          $ref: '#/components/schemas/Coordinates'
+        price:
+          type: integer
+          description: Стоимость билета
+        type:
+          type: string
+          enum:
+            - VIP
+            - USUAL
+            - BUDGETARY
+            - CHEAP
+          description: Тип билета
+        eventId:
+          type: integer
+          description: ИД события, связанного с билетом
+      required:
+        - name
+        - coordinates
+        - price
+        - eventId
+
+    Ticket: # Описание схемы билета
+      type: object
+      properties:
+        id:
+          type: integer
+          x-nullable: false
+          minimum: 1
+          description: Уникальный идентификатор билета
+        name:
+          type: string
+          x-nullable: false
+          minLength: 1
+          description: Название билета
+        coordinates:
+          $ref: '#/components/schemas/Coordinates'
+        creationDate:
+          type: string
+          format: date-time
+          x-nullable: false
+          description: Дата и время создания билета
+        price:
+          type: integer
+          minimum: 1
+          x-nullable: false
+          description: Стоимость билета
+        type:
+          type: string
+          x-nullable: false
+          enum:
+            - VIP
+            - USUAL
+            - BUDGETARY
+            - CHEAP
+          description: Тип билета
+        event:
+          $ref: '#/components/schemas/Event'
+      required:
+        - id
+        - name
+        - coordinates
+        - creationDate
+        - price
+
+    Coordinates: # Описание схемы координат
+      type: object
+      properties:
+        x:
+          type: integer
+          x-nullable: false
+          description: Координата X
+        y:
+          type: integer
+          x-nullable: false
+          description: Координата Y
+      required:
+        - x
+        - y
+
+    EventDTO: # Описание схемы для создания/обновления события без поля id
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          x-nullable: false
+          description: Название события
+        minAge:
+          type: integer
+          x-nullable: false
+          minimum: 1
+          description: Минимальный возраст для посетителей
+        ticketsCount:
+          type: integer
+          minimum: 1
+          description: Количество билетов на событие
+        description:
+          type: string
+          x-nullable: false
+          description: Описание события
+      required:
+        - name
+        - date
+        - minAge
+        - ticketsCount
+        - description
+
+    Event: # Описание схемы события
+      type: object
+      properties:
+        id:
+          type: integer
+          minimum: 1
+          x-nullable: false
+          description: Уникальный идентификатор события
+        name:
+          type: string
+          minLength: 1
+          x-nullable: false
+          description: Название события
+        date:
+          type: string
+          x-nullable: false
+          format: date-time
+          description: Дата и время события
+        minAge:
+          type: integer
+          x-nullable: false
+          minimum: 1
+          description: Минимальный возраст для посетителей
+        ticketsCount:
+          type: integer
+          minimum: 1
+          description: Количество билетов на событие
+        description:
+          type: string
+          x-nullable: false
+          description: Описание события
+      required:
+        - id
+        - name
+        - minAge
+        - ticketsCount
+
+    Error:
+      required:
+        - code
+        - message
+      properties:
+        code:
+          nullable: false
+          type: integer
+        message:
+          nullable: false
+          type: string

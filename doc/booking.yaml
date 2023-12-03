@@ -1,0 +1,243 @@
+openapi: 3.0.0
+info:
+  title: Ticket Service API
+  version: 1.0.11
+  description: Веб-сервис операций бронирования.
+
+paths:
+  /booking/sell/vip/{ticketId}/{personId}:
+    parameters:
+      - name: ticketId
+        in: path
+        description: ИД билета
+        required: true
+        schema:
+          type: integer
+      - name: personId
+        in: path
+        description: ИД пользователя
+        required: true
+        schema:
+          type: integer
+    post:
+      summary: Продать VIP билет
+      description: Создает копию указанного билета с категорией "VIP" и удвоенной ценой.
+      tags:
+        - Booking
+      responses:
+        201:
+          description: Билет успешно продан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+        400:
+          description: Невалидная схема документа или входные данные не верны.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                response:
+                  value:
+                    code: 400
+                    message: "id: должен быть больше или равен нулю"
+        404:
+          description: Билет/пользователь не найден.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                response:
+                  value:
+                    code: 404
+                    message: "Билет с ИД=1 не найден"
+        503:
+          description: Сервис недоступен.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                response:
+                  value:
+                    code: 503
+                    message: "Сервис управления билетами недоступен. Попробуйте позже"
+
+
+  /booking/sell/discount/{ticketId}/{personId}/{discount}:
+    parameters:
+      - name: ticketId
+        in: path
+        description: ИД билета
+        required: true
+        schema:
+          type: integer
+      - name: personId
+        in: path
+        description: ИД пользователя
+        required: true
+        schema:
+          type: integer
+      - name: discount
+        in: path
+        description: Размер скидки (%)
+        required: true
+        schema:
+          type: integer
+    post:
+      summary: Продать билет со скидкой
+      description: Создает новый билет на основе указанного, указывая скидку в заданное число % и увеличивая цену билета на ту же сумму.
+      tags:
+        - Booking
+      responses:
+        201:
+          description: Билет успешно продан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+        400:
+          description: Невалидная схема документа или входные данные не верны.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                response:
+                  value:
+                    code: 400
+                    message: "id: должен быть больше или равен нулю"
+        404:
+          description: Билет/пользователь не найден.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                response:
+                  value:
+                    code: 404
+                    message: "Пользователь с ИД=1 не найден"
+        503:
+          description: Сервис недоступен.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                response:
+                  value:
+                    code: 503
+                    message: "Сервис управления билетами недоступен. Попробуйте позже"
+
+
+components:
+  schemas:
+    Ticket: # Описание схемы билета
+      type: object
+      properties:
+        id:
+          type: integer
+          x-nullable: false
+          minimum: 1
+          description: Уникальный идентификатор билета
+        name:
+          type: string
+          x-nullable: false
+          minLength: 1
+          description: Название билета
+        coordinates:
+          $ref: '#/components/schemas/Coordinates'
+        creationDate:
+          type: string
+          format: date-time
+          x-nullable: false
+          description: Дата и время создания билета
+        price:
+          type: integer
+          minimum: 1
+          x-nullable: false
+          description: Стоимость билета
+        type:
+          type: string
+          x-nullable: false
+          enum:
+            - VIP
+            - USUAL
+            - BUDGETARY
+            - CHEAP
+          description: Тип билета
+        event:
+          $ref: '#/components/schemas/Event'
+      required:
+        - id
+        - name
+        - coordinates
+        - creationDate
+        - price
+
+    Coordinates: # Описание схемы координат
+      type: object
+      properties:
+        x:
+          type: integer
+          x-nullable: false
+          description: Координата X
+        y:
+          type: integer
+          x-nullable: false
+          description: Координата Y
+      required:
+        - x
+        - y
+
+    Event: # Описание схемы события
+      type: object
+      properties:
+        id:
+          type: integer
+          minimum: 1
+          x-nullable: false
+          description: Уникальный идентификатор события
+        name:
+          type: string
+          minLength: 1
+          x-nullable: false
+          description: Название события
+        date:
+          type: string
+          x-nullable: false
+          format: date-time
+          description: Дата и время события
+        minAge:
+          type: integer
+          x-nullable: false
+          minimum: 1
+          description: Минимальный возраст для посетителей
+        ticketsCount:
+          type: integer
+          minimum: 1
+          description: Количество билетов на событие
+        description:
+          type: string
+          x-nullable: false
+          description: Описание события
+      required:
+        - id
+        - name
+        - minAge
+        - ticketsCount
+
+    Error:
+      required:
+        - code
+        - message
+      properties:
+        code:
+          nullable: false
+          type: integer
+        message:
+          nullable: false
+          type: string
