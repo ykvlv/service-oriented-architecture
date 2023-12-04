@@ -1,12 +1,12 @@
 package soa.ticketservice.controller;
 
-import soa.ticketservice.common.Endpoints;
-import soa.ticketservice.error.ErrorDescriptions;
-import soa.ticketservice.model.CreateTicketRequest;
-import soa.ticketservice.model.TicketDto;
-import soa.ticketservice.model.enums.TicketType;
-import soa.ticketservice.repository.FilterCriteria;
-import soa.ticketservice.repository.SortCriteria;
+import soa.ticketservice.Endpoints;
+import soa.commons.exception.ErrorDescriptions;
+import soa.domain.model.CreateTicketRequest;
+import soa.domain.model.TicketDto;
+import soa.domain.model.enums.TicketType;
+import soa.domain.repository.FilterCriteria;
+import soa.domain.repository.SortCriteria;
 import soa.ticketservice.service.TicketService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

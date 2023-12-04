@@ -1,10 +1,10 @@
 package soa.ticketservice.service;
 
 
-import soa.ticketservice.model.CreateEventRequest;
-import soa.ticketservice.model.EventDto;
-import soa.ticketservice.repository.FilterCriteria;
-import soa.ticketservice.repository.SortCriteria;
+import soa.domain.model.CreateEventRequest;
+import soa.domain.model.EventDto;
+import soa.domain.repository.FilterCriteria;
+import soa.domain.repository.SortCriteria;
 
 import java.util.List;
 

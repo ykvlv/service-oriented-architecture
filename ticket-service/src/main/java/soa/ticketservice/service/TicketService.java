@@ -1,11 +1,11 @@
 package soa.ticketservice.service;
 
 
-import soa.ticketservice.model.CreateTicketRequest;
-import soa.ticketservice.model.TicketDto;
-import soa.ticketservice.model.enums.TicketType;
-import soa.ticketservice.repository.FilterCriteria;
-import soa.ticketservice.repository.SortCriteria;
+import soa.domain.model.CreateTicketRequest;
+import soa.domain.model.TicketDto;
+import soa.domain.model.enums.TicketType;
+import soa.domain.repository.FilterCriteria;
+import soa.domain.repository.SortCriteria;
 
 import java.util.List;
 
