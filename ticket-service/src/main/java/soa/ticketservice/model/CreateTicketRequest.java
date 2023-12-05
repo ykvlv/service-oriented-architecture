@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 /**
  * Модель запрса на саоздание Ticket.
  */
@@ -19,6 +21,8 @@ public class CreateTicketRequest {
     private Boolean refundable;
     private TicketType type;
     private EventDto event;
+    private Long id;
+    private Date creationDate;
 
     public void setRefundable(Object value) throws Exception {
         if (value instanceof Boolean) {

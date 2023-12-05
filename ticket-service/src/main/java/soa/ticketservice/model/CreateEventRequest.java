@@ -20,4 +20,5 @@ public class CreateEventRequest {
     private Date date;
     private Integer minAge;
     private EventType eventType;
+    private Long id;
 }

@@ -93,7 +93,8 @@ public class TicketServiceImpl implements TicketService {
                         request.getEvent().getName(),
                         request.getEvent().getDate(),
                         request.getEvent().getMinAge(),
-                        request.getEvent().getEventType()
+                        request.getEvent().getEventType(),
+                        request.getEvent().getId()
                 ));
                 System.out.println(newEvent.getId());
                 Event event = eventRepository.findById(newEvent.getId()).get();
@@ -208,7 +209,9 @@ public class TicketServiceImpl implements TicketService {
                 ticket.getDiscount(),
                 ticket.getRefundable(),
                 TicketType.VIP,
-                eventModelMapper.map(ticket.getEvent())
+                eventModelMapper.map(ticket.getEvent()),
+                ticket.getId(),
+                ticket.getCreationDate()
         ));
         return newVipTicket;
     }
@@ -227,7 +230,9 @@ public class TicketServiceImpl implements TicketService {
                 discount,
                 ticket.getRefundable(),
                 ticket.getType(),
-                eventModelMapper.map(ticket.getEvent())
+                eventModelMapper.map(ticket.getEvent()),
+                ticket.getId(),
+                ticket.getCreationDate()
         ));
         return newVipTicket;
     }
@@ -294,7 +299,8 @@ public class TicketServiceImpl implements TicketService {
                         request.getEvent().getName(),
                         request.getEvent().getDate(),
                         request.getEvent().getMinAge(),
-                        request.getEvent().getEventType()
+                        request.getEvent().getEventType(),
+                        request.getEvent().getId()
                 ));
                 System.out.println(newEvent.getId());
                 Event event = eventRepository.findById(newEvent.getId()).get();

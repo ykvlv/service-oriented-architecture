@@ -2,8 +2,8 @@ package soa.ticketservice.model.enums;
 
 public enum EventType {
     CONCERT("Концерт"),
-    BASEBALL("Бейсбол"),
-    BASKETBALL("Баскетбол"),
+    STANDUP("Стендап"),
+    OPERA("Опера"),
     THEATRE_PERFORMANCE("Театр");
 
     private String ruValue;
