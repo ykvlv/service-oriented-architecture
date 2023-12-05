@@ -1,20 +1,21 @@
 package soa.ticketservice.service;
 
-import soa.domain.mapper.EventModelMapper;
-import soa.domain.model.Event;
-import soa.domain.model.CreateEventRequest;
-import soa.domain.model.EventDto;
-import soa.domain.model.enums.EventType;
-import soa.commons.exception.ErrorDescriptions;
-import soa.domain.repository.EventRepository;
-import soa.domain.repository.EventSpecification;
-import soa.domain.repository.FilterCriteria;
-import soa.domain.repository.SortCriteria;
-import soa.domain.repository.TicketRepository;
+import soa.ticketservice.mapper.EventModelMapper;
+import soa.ticketservice.model.Event;
+import soa.ticketservice.model.CreateEventRequest;
+import soa.ticketservice.model.EventDto;
+import soa.ticketservice.model.enums.EventType;
+import soa.ticketservice.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.stereotype.Service;
+import soa.ticketservice.error.ErrorDescriptions;
+import soa.ticketservice.repository.EventRepository;
+import soa.ticketservice.repository.EventSpecification;
+import soa.ticketservice.repository.FilterCriteria;
+import soa.ticketservice.repository.SortCriteria;
+import soa.ticketservice.repository.TicketRepository;
 
 
 import javax.transaction.Transactional;

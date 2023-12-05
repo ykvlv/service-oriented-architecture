@@ -3,7 +3,9 @@ spring:
     url: 'jdbc:postgresql://localhost:5432/postgres'
     username:
     password:
+    driver-class-name: org.postgresql.Driver
   jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL9Dialect
     hibernate:
       ddl-auto: update
     show-sql: true
@@ -15,7 +17,5 @@ server:
   # The path to the keystore containing the certificate
     key-store: classpath:keystore/baeldung.p12
   # The password used to generate the certificate
-    key-store-password: password
+    key-store-password: Grisha
   # The alias mapped to the certificate
-    key-alias: baeldung
-    enabled: true
