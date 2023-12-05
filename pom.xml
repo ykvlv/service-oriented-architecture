@@ -7,7 +7,7 @@
 		<module>commons</module>
 		<module>domain</module>
 		<module>ticket-service</module>
-<!--		<module>booking-service</module>-->
+		<module>booking-service</module>
 	</modules>
 
 	<parent>

@@ -1,4 +1,4 @@
-package soa.commons.configuration;
+package soa.ticketservice.configuration;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
