@@ -212,7 +212,7 @@
   (let [mode @(re-frame/subscribe [::subs/mode])
         reloading? @(subscribe [::subs/reloading])]
     [:div {:class (c [:px 15] [:py 2])}
-     [:h1 {:class (c :text-center)}
+     [:h1 {:class (c :text-center :font-bold)}
       "Дешевый сервис билетов"]
      [:div
       {:class (c :font-mono [:pt 2])}
