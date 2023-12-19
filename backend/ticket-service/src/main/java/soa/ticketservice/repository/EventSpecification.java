@@ -6,6 +6,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class EventSpecification implements Specification<Event> {
         List<Predicate> predicates = new ArrayList<>();
 
         for (FilterCriteria crit : criteries) {
-            if(crit.getKey().equals("date") || crit.getKey().equals("eventType")){
+            if(crit.getKey().equals("date") || crit.getKey().equals("eventType") || crit.getKey().equals("name")){
                 continue;
             }
 

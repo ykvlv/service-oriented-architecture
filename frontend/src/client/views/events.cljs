@@ -12,16 +12,16 @@
 
 (defn event-type-icon [event-type]
   (cond
-    (= event-type "BASKETBALL")
-    [:i.fa-solid.fa-basketball]
+    (= event-type "OPERA")
+    [:i.fa-solid.fa-voicemail]
     (= event-type "CONCERT")
-    [:i.fa-solid.fa-microphone]
+    [:i.fa-solid.fa-music]
 
     (= event-type "THEATRE_PERFORMANCE")
     [:i.fa-solid.fa-masks-theater]
 
-    (= event-type "BASEBALL")
-    [:i.fa-solid.fa-baseball]))
+    (= event-type "STANDUP")
+    [:i.fa-solid.fa-microphone]))
 
 (defn event-new-prop [prop-path label label-id descr required?
                       & [select-values]]
@@ -91,7 +91,7 @@
       [:div {:class (c :text-l)} (str min-age-sub)]
 
       [components/input-with-init-value id [:eventType] "Тип мероприятия" "event-type"
-       "CONCERT, BASEBALL, BASKETBALL, THEATRE_PERFORMANCE" false
+       "CONCERT, STANDUP, OPERA, THEATRE_PERFORMANCE" false
        event-types]
       [:div {:class (c :text-l)} (str type-sub)]]]))
 

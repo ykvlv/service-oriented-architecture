@@ -406,9 +406,6 @@ input:focus + .hint { display: inline; }
 }
 
 
-body {
-  height: auto;
-}
 
 .client_views_events-190-20 .client_myclasses-5-3 {
   background-color: #ed7844 !important;
@@ -444,4 +441,30 @@ body {
 
 .client_views_core-176-19 {
   width: 50% !important;
+}
+
+.client_views_core-34-19 {
+  min-width: 40px;
+  padding-right: 0 !important;
+}
+
+.client_views_tickets-297-20 {
+  overflow: scroll;
+  height: 780px;
+}
+
+.client_views_core-160-19 > div:nth-of-type(3) {
+  overflow: scroll;
+  height: 510px;
+}
+
+.client_views_tickets-297-20 > div > div:not(.darkBG) {
+  min-height: 180px !important;
+}
+.client_views_tickets-297-20 > div:not(.darkBG) {
+  height: 200px;
+}
+
+.client_myclasses-17-3 {
+  max-height: 190px !important;
 }

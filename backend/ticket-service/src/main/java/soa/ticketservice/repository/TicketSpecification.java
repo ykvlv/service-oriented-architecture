@@ -22,7 +22,7 @@ public class TicketSpecification implements Specification<Ticket> {
 
     private String hackEnums(String maybeEnum) {
         if ("usual".equals(maybeEnum) || "budgetary".equals(maybeEnum) || "cheap".equals(maybeEnum) || "vip".equals(maybeEnum)
-                || "concert".equals(maybeEnum) || "baseball".equals(maybeEnum) || "basketball".equals(maybeEnum)
+                || "concert".equals(maybeEnum) || "standup".equals(maybeEnum) || "opera".equals(maybeEnum)
                 || "theatre_performance".equals(maybeEnum)){
             return maybeEnum.toUpperCase();
         }
@@ -34,7 +34,7 @@ public class TicketSpecification implements Specification<Ticket> {
         List<Predicate> predicates = new ArrayList<>();
 
         for (FilterCriteria crit : criteries) {
-            if(crit.getKey().equals("creationDate") || crit.getKey().equals("type")){
+            if(crit.getKey().equals("creationDate") || crit.getKey().equals("type") || crit.getKey().equals("name")){
                 continue;
             }
 

@@ -10,6 +10,7 @@ import soa.ticketservice.model.Event;
 import soa.ticketservice.model.EventDto;
 import soa.ticketservice.model.Ticket;
 import soa.ticketservice.model.TicketDto;
+import soa.ticketservice.model.enums.EventType;
 import soa.ticketservice.model.enums.TicketType;
 import soa.ticketservice.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ import soa.ticketservice.repository.SortCriteria;
 import soa.ticketservice.repository.TicketRepository;
 import soa.ticketservice.repository.TicketSpecification;
 
+import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -130,25 +132,92 @@ public class TicketServiceImpl implements TicketService {
 
             for (var f :filterBy){
                 if (f.getKey().equals("creationDate")){
-                    if (f.getOperation().equals("eq")) {
-                        ticketsStream =ticketsStream.filter(ticket -> ticket.getCreationDate().equals((Date)f.getValue()));
-                    } else if (f.getOperation().equals("ne")) {
-                        ticketsStream =ticketsStream.filter(ticket -> !ticket.getCreationDate().equals((Date)f.getValue()));
-                    } else if (f.getOperation().equals("gt")) {
-                        ticketsStream =ticketsStream.filter(ticket -> ticket.getCreationDate().before((Date)f.getValue()));
-                    } else {
-                        ticketsStream =ticketsStream.filter(ticket -> ticket.getCreationDate().after((Date)f.getValue()));
-                    }
+					ticketsStream = switch (f.getOperation()) {
+						case "eq" ->
+								ticketsStream.filter(ticket -> {
+                                    if (ticket.getCreationDate() == null) return false;
+                                    Long curdate = (ticket.getCreationDate().getTime()-86400000L) /86400000L;
+                                    Long needdate = ((Date) f.getValue()).getTime()/86400000L;
+
+                                    var eq = curdate.compareTo(needdate);
+									return eq == 0;
+                                });
+						case "ne" ->
+                                ticketsStream.filter(ticket -> {
+                                    if (ticket.getCreationDate() == null) return false;
+                                    Long curdate = (ticket.getCreationDate().getTime()-86400000L) /86400000L;
+                                    Long needdate = ((Date) f.getValue()).getTime()/86400000L;
+
+                                    var eq = curdate.compareTo(needdate);
+                                    return eq != 0;
+                                });
+						case "gt" ->
+                                ticketsStream.filter(ticket -> {
+                                    if (ticket.getCreationDate() == null) return false;
+                                    Long curdate = (ticket.getCreationDate().getTime()-86400000L) /86400000L;
+                                    Long needdate = ((Date) f.getValue()).getTime()/86400000L;
+
+                                    var eq = curdate.compareTo(needdate);
+                                    return eq > 0;
+                                });
+						default -> ticketsStream.filter(ticket -> {
+                            if (ticket.getCreationDate() == null) return false;
+                            Long curdate = (ticket.getCreationDate().getTime()-86400000L) /86400000L;
+                            Long needdate = ((Date) f.getValue()).getTime()/86400000L;
+
+                            var eq = curdate.compareTo(needdate);
+                            return eq < 0;
+                        });
+					};
                 } else if (f.getKey().equals("type")){
-                    if (f.getOperation().equals("eq")) {
-                        ticketsStream = ticketsStream.filter(event -> event.getType().equals(f.getValue()));
-                    } else if (f.getOperation().equals("ne")) {
-                        ticketsStream = ticketsStream.filter(event -> !event.getType().equals(f.getValue()));
-                    } else if (f.getOperation().equals("gt")) {
-                        ticketsStream = ticketsStream.filter(event -> (event.getType().compareTo((TicketType) f.getValue()) < 0));
-                    } else {
-                        ticketsStream = ticketsStream.filter(event -> (event.getType().compareTo((TicketType) f.getValue()) > 0));
+                    TicketType newS = (TicketType) f.getValue();
+                    if (newS.toString().equals("-")) {
+                        continue;
                     }
+					ticketsStream = switch (f.getOperation()) {
+						case "eq" -> ticketsStream.filter(ticket -> {
+                            if (ticket.getType() == null) return false;
+                            TicketType curtype = ticket.getType();
+                            TicketType needtype = ((TicketType) f.getValue());
+
+                            var eq = Long.compare(curtype.getValue(), needtype.getValue());
+                            return eq == 0;
+                        });
+						case "ne" -> ticketsStream.filter(ticket -> {
+                            if (ticket.getType() == null) return false;
+                            TicketType curtype = ticket.getType();
+                            TicketType needtype = ((TicketType) f.getValue());
+
+                            var eq = Long.compare(curtype.getValue(), needtype.getValue());
+                            return eq != 0;
+                        });
+						case "gt" ->
+                                ticketsStream.filter(ticket -> {
+                                    if (ticket.getType() == null) return false;
+                                    TicketType curtype = ticket.getType();
+                                    TicketType needtype = ((TicketType) f.getValue());
+
+                                    var eq = Long.compare(curtype.getValue(), needtype.getValue());
+                                    return eq > 0;
+                                });
+						default ->
+                                ticketsStream.filter(ticket -> {
+                                    if (ticket.getType() == null) return false;
+                                    TicketType curtype = ticket.getType();
+                                    TicketType needtype = ((TicketType) f.getValue());
+
+                                    var eq = Long.compare(curtype.getValue(), needtype.getValue());
+                                    return eq < 0;
+                                });
+					};
+                } else if (f.getKey().equals("name")) {
+                    String name = (String) f.getValue();
+                    ticketsStream = switch (f.getOperation()) {
+//                        case "ne" -> eventsStream.filter(event -> !event.getDate().equals((Date) f.getValue()));
+//                        case "gt" -> eventsStream.filter(event -> event.getDate().before((Date) f.getValue()));
+//                        case "lt" -> eventsStream.filter(event -> event.getDate().after((Date) f.getValue()));
+                        default -> ticketsStream.filter(ticket -> ticket.getName().contains(name.subSequence(0, name.length())));
+                    };
                 }
             }
 
@@ -362,7 +431,7 @@ public class TicketServiceImpl implements TicketService {
     public Long getTicketsTypeCount(TicketType ticketType) {
         var all = ticketRepository.findAll();
         return StreamSupport.stream(all.spliterator(), false)
-                .filter(ticket -> ticket.getType().getValue() < ticketType.getValue())
+                .filter(ticket -> ticket.getType() != null && ticket.getType().getValue() < ticketType.getValue())
                 .count();
     }
 }

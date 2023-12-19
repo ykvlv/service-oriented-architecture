@@ -174,7 +174,7 @@
         {:class [cls/base-class (c :cursor-pointer)]
          :on-click #(dispatch [::events/start-ticket-copy id])}
         (edit-ticket-icon)
-        "Скопировать..."]
+        "Копирование"]
 
        [:div
         {:class [cls/base-class (c :cursor-pointer)]

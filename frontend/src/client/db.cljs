@@ -3,30 +3,30 @@
 (def default-filters
  {:tickets
   {:id {:value "" :shown true}
-   :name {:value "" :shown false}
-   :x {:value "" :shown false}
-   :y {:value "" :shown false}
-   :refundable {:value "" :shown false}
-   :type {:value "" :shown false}
-   :eventId  {:value "" :shown false}}
+   :name {:value "" :shown true}
+   :x {:value "" :shown true}
+   :y {:value "" :shown true}
+   :refundable {:value "" :shown true}
+   :type {:value "" :shown true}
+   :eventId  {:value "" :shown true}}
 
   :events {:id
            {:value "" :shown true}
            :name
-           {:value "" :shown false}
+           {:value "" :shown true}
            :date
-           {:value "" :shown false}
+           {:value "" :shown true}
            :minAge
-           {:value "" :shown false}
+           {:value "" :shown true}
            :eventType
-           {:value "" :shown false}}}
+           {:value "" :shown true}}}
  )
 (def default-db
   {:active-panel :home-panel
    :toggle-new false
    :toggle-change false
    :paging {:current-page 1
-            :page-size 5}
+            :page-size 10}
    :event {:sorting {0 {:field :id :sort-order nil}}}
    :ticket {:update-id 1
             :sorting {0 {:field :id :sort-order nil}}

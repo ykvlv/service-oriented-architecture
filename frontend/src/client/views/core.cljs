@@ -76,26 +76,10 @@
         shown? (:shown filter-db)]
     ^{:key prop}
     [:div {:class (c :border [:mb 4] [:mt 4] [:p 2])}
-     [:div {:class (c :flex :flex-row [:m 1] :justify-between)}
-      [:i.fa-solid.fa-magnifying-glass]
-      [:h1 label]
-      [:button {:class (c [:w 6]
-                          :align-right
-                          :self-end
-                          :float-right
-                          :rounded
-                          :transition-all [:duration 200]
-                          [:focus-within :outline-none :shadow-none [:border "#2e3633"]]
-                          [:focus :outline-none :shadow-none [:border "#2e3633"]]
-                          [:hover [:border "#2e3633"]]
-                          [:h 8])
-                :on-click #(dispatch [::events/hide-filter prop])}
+     [:div {:class (c :flex :flex-row [:m 1] :justify-center)}
+      [:h1 label]]
 
-       (if shown?
-         [:i.fa-regular.fa-eye-slash]
-         [:i.fa-regular.fa-eye])]]
 
-     (when shown?
        [:div {:class (c :w-full)}
         (when (not only=?)
           (components/selector
@@ -123,12 +107,12 @@
             :maxLength 30
             :on-change
             #(dispatch [:dispatch-debounce
-                        {:delay 1000
+                        {:delay 300
                          :event [::events/change-filter
                                  prop
                                  :value
                                  (.. % -target -value)]}])
-            :placeholder "Фильтр"}])])]))
+            :placeholder "Фильтр"}])]]))
 
 (defn get-filter-values [mode]
   (let [ticket-types @(subscribe [::subs/ticket-types])
@@ -174,7 +158,7 @@
         ticket-types @(subscribe [::subs/ticket-types])
         ticket-discount-count-opened? @(subscribe [::subs/ticket-discount-count-opened])]
     [:div {:class (c :flex :flex-col)}
-     [:h3 {:class (c :text-center :font-bold)} "Крутые запросы"]
+     [:h3 {:class (c :text-center :font-bold)} "Запросы"]
      [:div {:class [(c :flex :flex-col) (c :text-center :w-full)]}
 
       [:div {:class (c :flex)}
@@ -206,7 +190,7 @@
                 [:td (:count one-map)]])]]
            [:button.cancelBtn {:class (c [:w-min 100])
                                :on-click #(dispatch [::events/close-hueta])}
-            "Очень информативно, спасибо"]
+            "Закрыть"]
            :modal-medium])]]
       [:hr {:class (c [:pt 2])}]
 
@@ -229,7 +213,7 @@
         reloading? @(subscribe [::subs/reloading])]
     [:div {:class (c [:px 15] [:py 2])}
      [:h1 {:class (c :text-center)}
-      "SOA Lab2 Slava+Kirill"]
+      "Дешевый сервис билетов"]
      [:div
       {:class (c :font-mono [:pt 2])}
       [:div
@@ -252,11 +236,12 @@
                  (c :cursor-pointer)]}]
 
        [:div {:class (c :flex)}
-        [header mode]
         (when (= :events mode)
           [events-view/events-view])
         (when (= :tickets mode)
-          [tickets/tickets-view])]]]]))
+          [tickets/tickets-view])
+        [header mode]
+        ]]]]))
 
 (defmethod routes/panels :home-panel [] [home-panel])
 

@@ -78,7 +78,7 @@ public class Ticket {
     /**
      * На кокое событие билет.
      */
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name="event_id")
     private Event event;  //Поле не может быть null
 }

@@ -70,16 +70,45 @@ public class EventServiceImpl implements EventService {
 
             for (var f :filterBy){
                 if (f.getKey().equals("date")){
-                    if (f.getOperation().equals("eq")) {
-                        eventsStream = eventsStream.filter(event -> event.getDate().equals((Date)f.getValue()));
-                    } else if (f.getOperation().equals("ne")) {
-                        eventsStream = eventsStream.filter(event -> !event.getDate().equals((Date)f.getValue()));
-                    } else if (f.getOperation().equals("gt")) {
-                        eventsStream = eventsStream.filter(event -> event.getDate().before((Date)f.getValue()));
-                    } else {
-                        eventsStream = eventsStream.filter(event -> event.getDate().after((Date)f.getValue()));
-                    }
+					eventsStream = switch (f.getOperation()) {
+						case "eq" -> eventsStream.filter(event -> {
+                            if (event.getDate() == null) return false;
+                            Long curdate = (event.getDate().getTime()-86400000L) /86400000L;
+                            Long needdate = ((Date) f.getValue()).getTime()/86400000L;
+
+                            var eq = curdate.compareTo(needdate);
+                            return eq == 0;
+                        });
+						case "ne" -> eventsStream.filter(event -> {
+                            if (event.getDate() == null) return false;
+                            Long curdate = (event.getDate().getTime()-86400000L) /86400000L;
+                            Long needdate = ((Date) f.getValue()).getTime()/86400000L;
+
+                            var eq = curdate.compareTo(needdate);
+                            return eq != 0;
+                        });
+						case "gt" -> eventsStream.filter(event -> {
+                            if (event.getDate() == null) return false;
+                            Long curdate = (event.getDate().getTime()-86400000L) /86400000L;
+                            Long needdate = ((Date) f.getValue()).getTime()/86400000L;
+
+                            var eq = curdate.compareTo(needdate);
+                            return eq > 0;
+                        });
+						default -> eventsStream.filter(event -> {
+                            if (event.getDate() == null) return false;
+                            Long curdate = (event.getDate().getTime()-86400000L) /86400000L;
+                            Long needdate = ((Date) f.getValue()).getTime()/86400000L;
+
+                            var eq = curdate.compareTo(needdate);
+                            return eq < 0;
+                        });
+					};
                 } else if (f.getKey().equals("eventType")){
+                    EventType newS = (EventType) f.getValue();
+                    if (newS.toString().equals("-")) {
+                        continue;
+                    }
                     if (f.getOperation().equals("eq")) {
                         eventsStream = eventsStream.filter(event -> event.getEventType().equals(f.getValue()));
                     } else if (f.getOperation().equals("ne")) {
@@ -89,6 +118,14 @@ public class EventServiceImpl implements EventService {
                     } else {
                         eventsStream = eventsStream.filter(event -> (event.getEventType().compareTo((EventType) f.getValue()) > 0));
                     }
+                } else if (f.getKey().equals("name")) {
+                    String name = (String) f.getValue();
+                    eventsStream = switch (f.getOperation()) {
+//                        case "ne" -> eventsStream.filter(event -> !event.getDate().equals((Date) f.getValue()));
+//                        case "gt" -> eventsStream.filter(event -> event.getDate().before((Date) f.getValue()));
+//                        case "lt" -> eventsStream.filter(event -> event.getDate().after((Date) f.getValue()));
+                        default -> eventsStream.filter(event -> event.getName().contains(name.subSequence(0, name.length())));
+                    };
                 }
             }
 
@@ -100,8 +137,11 @@ public class EventServiceImpl implements EventService {
                     switch (sortCriteria.getKey()) {
                         case "id" -> currentComp = Comparator.comparing(Event::getId);
                         case "name" -> currentComp = Comparator.comparing(Event::getName);
-                        case "date" -> currentComp = Comparator.comparing(Event::getDate);
+                        case "date" -> currentComp = desc
+                                ? Comparator.comparing(Event::getDate, Comparator.nullsFirst(Comparator.naturalOrder()))
+                                : Comparator.comparing(Event::getDate, Comparator.nullsLast(Comparator.naturalOrder()));
                         case "minAge" -> currentComp = Comparator.comparing(Event::getMinAge);
+                        case "eventType" -> currentComp = Comparator.comparing(Event::getEventType);
                         default -> throw ErrorDescriptions.INCORRECT_SORT.exception();
                     }
                     if (desc) currentComp = currentComp.reversed();

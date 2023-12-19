@@ -166,7 +166,7 @@
       [selector [1 5 10 15 20 30 40 50 60]
        #(dispatch [::events/change-page-size
                    (.. % -target -value)])
-       {:default-value 5
+       {:default-value 10
         :cls (c [:w 15] [:ml 3])}]]
      [:div {:class (c :flex [:gap 4]
                       :items-center

@@ -10,9 +10,6 @@ import org.springframework.web.cors.CorsConfiguration;
 
 import java.util.List;
 
-/**
- * @author Grigory Yakovlev (Grigory.Yakovlev@lanit-tercom.ru) created on 05.12.2023.
- */
 @Configuration
 public class SecurityConfiguration {
 

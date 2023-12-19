@@ -6,7 +6,7 @@
   {::name  "Ожидалась не пустая строка"
    ::date "Ожидалась строка в формате yyyy-MM-dd"
    ::minAge "Ожидалось целое число > 0"
-   ::eventType "Ожидался один из: CONCERT, BASEBALL, BASKETBALL, THEATRE_PERFORMANCE"})
+   ::eventType "Ожидался один из: CONCERT, STANDUP, OPERA, THEATRE_PERFORMANCE"})
 
 (s/def ::name (s/and string? (fn [s] (not= 0 (count s)))))
 
@@ -23,7 +23,7 @@
                      (or
                       (nil? v)
                       (= "" v)
-                      (get #{"CONCERT" "BASEBALL" "BASKETBALL" "THEATRE_PERFORMANCE"} v))))
+                      (get #{"CONCERT" "STANDUP" "OPERA" "THEATRE_PERFORMANCE"} v))))
 
 (s/def ::event (s/keys :req-un [::name
                                 ::minAge]

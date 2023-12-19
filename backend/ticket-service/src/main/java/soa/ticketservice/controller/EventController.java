@@ -73,7 +73,7 @@ public class EventController {
                         try {
                             EventType.valueOf(val);
                         } catch (Exception exc) {
-                            throw new Exception("Недопустимое значение eventType: должно быть одно из значений: [CONCERT, BASEBALL, BASKETBALL, THEATRE_PERFORMANCE]");
+                            throw new Exception("Недопустимое значение eventType: должно быть одно из значений: [CONCERT, STANDUP, OPERA, THEATRE_PERFORMANCE]");
                         }
                     } else if (key.equals("date")) {
                         Date date = formatter.parse(val);
@@ -99,7 +99,7 @@ public class EventController {
         }
 
         List<SortCriteria> sc = new ArrayList<>();
-        if (sort != null) {
+        if (sort != null && !sort.equals("-")) {
             try {
                 var listSorts = Arrays.asList(sort.split(","));
                 for (String oneSort : listSorts) {
