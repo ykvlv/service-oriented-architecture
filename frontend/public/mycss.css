@@ -402,6 +402,7 @@ input:focus + .hint { display: inline; }
 
 #app {
   background-color: #3371f5;
+  overflow: scroll;
 
 }
 
@@ -411,7 +412,7 @@ input:focus + .hint { display: inline; }
   background-color: #ed7844 !important;
 }
 
-.client_views_tickets-297-20 .client_myclasses-5-3 {
+.client_views_tickets-131-21 .client_myclasses-5-3 {
   background-color: #ed7844 !important;
 }
 
@@ -419,13 +420,13 @@ input:focus + .hint { display: inline; }
   color: black !important;
 }
 
-.client_views_core-160-17 {
+.client_views_core-142-17 {
   background-color: #ed7844 !important;
   margin: 10px 10px 10px 10px;
   padding: 10px 10px 10px 10px;
 }
 
-.client_views_core-78-19 {
+.client_views_core-77-19 {
   background-color: white;
   border-radius: 10px;
 }
@@ -443,25 +444,30 @@ input:focus + .hint { display: inline; }
   width: 50% !important;
 }
 
-.client_views_core-34-19 {
+.client_views_core-33-19 {
   min-width: 40px;
   padding-right: 0 !important;
 }
 
-.client_views_tickets-297-20 {
-  overflow: scroll;
-  height: 780px;
+.client_views_tickets-279-20 {
+  /*overflow: scroll;*/
+  /*height: 780px;*/
 }
 
-.client_views_core-160-19 > div:nth-of-type(3) {
+.client_views_core-210-19 > div:nth-of-type(3) {
   overflow: scroll;
   height: 510px;
 }
 
-.client_views_tickets-297-20 > div > div:not(.darkBG) {
+.client_views_core-212-21 > div:nth-of-type(2) > div:nth-of-type(1) {
+  overflow: scroll;
+  max-height: 200px;
+}
+
+.client_views_tickets-279-20 > div > div:not(.darkBG) {
   min-height: 180px !important;
 }
-.client_views_tickets-297-20 > div:not(.darkBG) {
+.client_views_tickets-279-20 > div:not(.darkBG) {
   height: 200px;
 }
 

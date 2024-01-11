@@ -23,4 +23,9 @@ public interface TicketRepository extends CrudRepository<Ticket, Long>, JpaSpeci
     void deleteAllByEventId(
             @Param("id") Long eventId
     );
+
+    @Query(value = "SELECT COUNT(*) as count FROM ticket WHERE type IS NOT NULL GROUP BY type", nativeQuery = true)
+    List<Integer> findDistinctTypesWithCount();
+
+    List<Ticket> findAll();
 }

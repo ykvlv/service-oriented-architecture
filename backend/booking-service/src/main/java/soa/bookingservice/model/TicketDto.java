@@ -1,6 +1,6 @@
 package soa.bookingservice.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
@@ -15,10 +15,9 @@ public class TicketDto {
     private Integer id;
     private String name;
     private CoordinatesDto coordinates;
-    private Date creationDate;
+    private LocalDate creationDate;
     private Long price;
     private Double discount;
-    private Boolean refundable;
     private TicketType type;
     private Event discipline;
 }

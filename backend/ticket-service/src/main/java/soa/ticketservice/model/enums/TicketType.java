@@ -8,9 +8,9 @@ public enum TicketType {
     VIP("Випка", 4);
 
     private String ruValue;
-    private int value;
+    private Integer value;
 
-    TicketType(String ruValue, int value) {
+    TicketType(String ruValue, Integer value) {
         this.ruValue = ruValue;
         this.value = value;
     }
@@ -22,5 +22,14 @@ public enum TicketType {
 
     public int getValue() {
         return value;
+    }
+
+    public static TicketType getType(int value) {
+        for (TicketType type : values()) {
+            if (type.getValue() == value) {
+                return type;
+            }
+        }
+        throw new IllegalArgumentException("No TicketType with value: " + value);
     }
 }

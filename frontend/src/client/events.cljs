@@ -253,7 +253,6 @@
                  :y parse-long}
    :type #(if (= "" %) nil %)
    :eventId parse-long
-   :refundable #(if (boolean? %) % (parse-boolean %))
    :price parse-double
    :discount parse-double})
 
@@ -667,7 +666,7 @@
 (reg-event-fx
  ::download-ticket-types-count
  (fn [{:keys [db]} [_]]
-   (http-get db (full-url (str "/tickets/type/count?type=" (get db :ticket-type)))
+   (http-get db (full-url (str "/tickets/name?name=" (get db :ticket-type)))
              [::ticket-types-count-downloaded]
              [::ticket-types-count-not-downloaded])))
 
@@ -704,7 +703,7 @@
 (reg-event-fx
  ::download-ticket-discount-sum
  (fn [{:keys [db]} _]
-   (http-get db (full-url "/tickets/discount/sum")
+   (http-get db (full-url "/tickets/min-type")
              [::ticket-discount-sum-downloaded]
              [::ticket-discount-sum-not-downloaded])))
 

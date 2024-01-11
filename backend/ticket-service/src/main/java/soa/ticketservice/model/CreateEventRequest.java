@@ -1,12 +1,11 @@
 package soa.ticketservice.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import soa.ticketservice.model.enums.EventType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * Модель запрса на саоздание Event.
@@ -16,8 +15,7 @@ import java.util.Date;
 @AllArgsConstructor(staticName = "of")
 public class CreateEventRequest {
     private String name;
-    @JsonFormat(pattern="yyyy-MM-dd")
-    private Date date;
+    private LocalDate date;
     private Integer minAge;
     private EventType eventType;
     private Long id;

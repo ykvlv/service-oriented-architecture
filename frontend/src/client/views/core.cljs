@@ -19,7 +19,6 @@
              {:value "creationDate" :desc "Дата создания"}
              {:value "price" :desc "Цена"}
              {:value "discount" :desc "Скидка"}
-             {:value "refundable" :desc "Возвратный"}
              {:value "type" :desc "Тип мероприятия"}]
 
    :events  ["id"
@@ -124,7 +123,6 @@
                     [:creationDate false "Дата создания"]
                     [:price false "Цена"]
                     [:discount false "Скидка"]
-                    [:refundable true "Возвратный" [true false]]
                     [:type false "Тип" ticket-types]]
           :events [[:id false "id"]
                    [:name true "Название мероприятия"]
@@ -151,11 +149,63 @@
                    [:focus :outline-none :shadow-none [:border "#2e3633"]]
                    [:hover [:border "#2e3633"]]))
 
+
+(defn type-view-2 [type]
+  (cond
+    (= type "VIP")
+    [:i.fa-regular.fa-star]
+
+    (= type "USUAL")
+    [:i.fa-solid.fa-check]
+
+    (= type "BUDGETARY")
+    [:i.fa-solid.fa-wheelchair-move]
+
+    (= type "CHEAP")
+    [:i.fa-regular.fa-star]))
+
+(defn one-ticket-2 [id]
+  (let [ticket @(subscribe [::subs/ticket-by-id id])
+        event  @(subscribe [::subs/event-by-id (:eventId ticket)])]
+    ^{:key id}
+    [:div
+     [:div {:class [(c [:bg "#FAFAFA"]
+                       [:border :current]
+                       :flex-row
+                       :flex
+                       :justify-between
+                       [:p 2]
+                       [:m 2]
+                       [:hover :shadow-inner [:bg :gray-200]]
+                       [:rounded :xl])]}
+      [:div {:class (c [:w-max 100])}
+       [:div
+        [:div "ID: " id]
+        [:span #_{:class (c :text-sm)}
+         (:creationDate ticket) " " (type-view-2 (:type ticket)) " " [:span (:type ticket)] " "]
+        [:div  {:class (c [:w-max 100])}
+         [:span {:class (c :text-xl :text-bold)}
+          [:span.truncate {:class (c [:h 9] [:h-max 9]) :title (:name event)}
+           (if (:name event)
+             (if (> (count (:name event)) 15)
+               (str (apply str (take 15 (:name event))) "...") (:name event))
+             "Неизвестное мероприятие")]]]]
+       [:span {:class (c :text-sm [:h 9] [:h-max 9])
+               :title (:name ticket)}
+        (str "Название билета: "
+             (if (> (count (:name ticket)) 15)
+               (str (apply str (take 15 (:name ticket))) "...") (:name ticket)))]]
+      [:div  {:class (c [:w-max 100])}
+       [:div
+        "СКИДКА: " (:discount ticket) "%"]
+       [:div "ЦЕНА: " (:price ticket)]
+       [:div (str "(" (:x (:coordinates ticket)) ","  (:y (:coordinates ticket)) ")")]]
+      ]]))
+
 (defn header [mode]
   (let [tickets-discount-sum @(subscribe [::subs/tickets-discount-sum])
         tickets-discount-count @(subscribe [::subs/tickets-discount-count])
         tickets-types-count @(subscribe [::subs/tickets-types-count])
-        ticket-types @(subscribe [::subs/ticket-types])
         ticket-discount-count-opened? @(subscribe [::subs/ticket-discount-count-opened])]
     [:div {:class (c :flex :flex-col)}
      [:h3 {:class (c :text-center :font-bold)} "Запросы"]
@@ -166,22 +216,22 @@
         [:button {:class button-cls
                   :on-click
                   #(dispatch [::events/download-ticket-discount-sum])}
-         "Сумма скидок"]
-        [:h5 tickets-discount-sum]]
+         "Билет с минимальным типом"]
+        ]
        [:div
         [:button {:class button-cls
                   :on-click
                   #(dispatch [::events/download-ticket-discount-count])}
-         "Количество билетов в зависимости от скидки"]
+         "Уникальные типы билетов"]
         (when ticket-discount-count-opened?
           [components/modal
-           "Количество билетов в зависимости от скидки"
+           "Уникальные типы билетов"
            [:div
             [:table {:class [(c :border :table :w-full)
                              cls/div-center]}
 
              [:thead
-              [:tr [:th "Скидка"]
+              [:tr [:th "Тип билета"]
                [:th "Количество билетов"]]]
              (for [one-map tickets-discount-count]
                ^{:key (:discount one-map)}
@@ -192,16 +242,31 @@
                                :on-click #(dispatch [::events/close-hueta])}
             "Закрыть"]
            :modal-medium])]]
+      (if tickets-discount-sum
+        [one-ticket-2 (:id tickets-discount-sum) (fn [] (dispatch [::events/delete-ticket (:id tickets-discount-sum)]))]
+        nil)
       [:hr {:class (c [:pt 2])}]
 
       [:div
        [:button {:class button-cls
                  :on-click
                  #(dispatch [::events/download-ticket-types-count])}
-        "Количество билетов меньших заданного типа"]
-       [components/selector ticket-types #(dispatch [::events/change-ticket-type (.. % -target -value)])]
+        "Получить билеты по подстроке в имени"]
+       [:input {:type "text"
+                :id "substring-input"
+                :class (c
+                         :w-full
+                         :rounded
+                         :border
+                         [:h 8])
+                :on-change #(dispatch [::events/change-ticket-type (.. % -target -value)])}]
 
-       [:h5 tickets-types-count]]]
+       (if tickets-types-count
+         [:div
+         (for [ticket tickets-types-count]
+           ^{:key (:id ticket)}
+           [one-ticket-2 (:id ticket) (fn [] (dispatch [::events/delete-ticket (:id ticket)]))])]
+         nil)]]
 
      [:hr {:class (c [:pt 2])}]
      (sort-view mode)

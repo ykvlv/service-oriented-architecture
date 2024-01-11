@@ -5,7 +5,6 @@ import soa.ticketservice.model.Event;
 import soa.ticketservice.model.CreateEventRequest;
 import soa.ticketservice.model.EventDto;
 import soa.ticketservice.model.enums.EventType;
-import soa.ticketservice.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
@@ -19,6 +18,8 @@ import soa.ticketservice.repository.TicketRepository;
 
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -51,7 +52,7 @@ public class EventServiceImpl implements EventService {
         EventDto createdEvent = new EventDto();
         createdEvent.setId(event.getId());
         createdEvent.setName(event.getName());
-        createdEvent.setDate(event.getDate());
+        createdEvent.setDate(event.getDate() == null ? null : event.getDate().atStartOfDay().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")));
         createdEvent.setMinAge(event.getMinAge());
         createdEvent.setEventType(event.getEventType());
         return createdEvent;
@@ -73,32 +74,32 @@ public class EventServiceImpl implements EventService {
 					eventsStream = switch (f.getOperation()) {
 						case "eq" -> eventsStream.filter(event -> {
                             if (event.getDate() == null) return false;
-                            Long curdate = (event.getDate().getTime()-86400000L) /86400000L;
-                            Long needdate = ((Date) f.getValue()).getTime()/86400000L;
+                            Long curdate = event.getDate().toEpochDay();
+                            Long needdate = ((LocalDate) f.getValue()).toEpochDay();
 
                             var eq = curdate.compareTo(needdate);
                             return eq == 0;
                         });
 						case "ne" -> eventsStream.filter(event -> {
                             if (event.getDate() == null) return false;
-                            Long curdate = (event.getDate().getTime()-86400000L) /86400000L;
-                            Long needdate = ((Date) f.getValue()).getTime()/86400000L;
+                            Long curdate = event.getDate().toEpochDay();
+                            Long needdate = ((LocalDate) f.getValue()).toEpochDay();
 
                             var eq = curdate.compareTo(needdate);
                             return eq != 0;
                         });
 						case "gt" -> eventsStream.filter(event -> {
                             if (event.getDate() == null) return false;
-                            Long curdate = (event.getDate().getTime()-86400000L) /86400000L;
-                            Long needdate = ((Date) f.getValue()).getTime()/86400000L;
+                            Long curdate = event.getDate().toEpochDay();
+                            Long needdate = ((LocalDate) f.getValue()).toEpochDay();
 
                             var eq = curdate.compareTo(needdate);
                             return eq > 0;
                         });
 						default -> eventsStream.filter(event -> {
                             if (event.getDate() == null) return false;
-                            Long curdate = (event.getDate().getTime()-86400000L) /86400000L;
-                            Long needdate = ((Date) f.getValue()).getTime()/86400000L;
+                            Long curdate = event.getDate().toEpochDay();
+                            Long needdate = ((LocalDate) f.getValue()).toEpochDay();
 
                             var eq = curdate.compareTo(needdate);
                             return eq < 0;
@@ -154,11 +155,14 @@ public class EventServiceImpl implements EventService {
                 if (c != null) eventsStream = eventsStream.sorted(c);
             }
 
-            return eventsStream
+            var es =  eventsStream
                     .skip(offset)
                     .limit(limit)
                     .map(eventModelMapper::map)
                     .collect(Collectors.toList());
+
+            System.out.println(es);
+            return es;
         } catch (
             InvalidDataAccessApiUsageException exc){
                 throw new Exception("В фильтре передано недопустимое значение для сравнения");
@@ -171,8 +175,11 @@ public class EventServiceImpl implements EventService {
             throw ErrorDescriptions.EVENT_NOT_FOUND.exception();
         }
 
-        Event event = eventRepository.getById(eventId);
-        return eventModelMapper.map(event);
+        Optional<Event> optionalEvent = eventRepository.findById(eventId);
+        if (optionalEvent.isEmpty()) {
+            throw ErrorDescriptions.EVENT_NOT_FOUND.exception();
+        }
+        return eventModelMapper.map(optionalEvent.get());
     }
 
     @Override

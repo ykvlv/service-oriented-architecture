@@ -18,11 +18,11 @@ public enum ErrorDescriptions {
 
     EVENT_NOT_FOUND("Событие с заданным ID не найдено", HttpStatus.NOT_FOUND),
     CANT_DELETE_EVENT("Нельзя удалить событие, пока на него существует хотя бы один билет", HttpStatus.BAD_REQUEST),
-    REFUNDABLE_MUST_PRESENT("Refundable должен быть либо true либо false", HttpStatus.BAD_REQUEST),
-    DISCOUNT_MUST_PRESENT("Скидка должна быть от 1 до 100", HttpStatus.BAD_REQUEST),
+    NAME_MUST_PRESENT("Название события должно присутствовать", HttpStatus.BAD_REQUEST),
+    PRICE_MUST_PRESENT("Цена должна быть больше 0", HttpStatus.BAD_REQUEST),
+    DISCOUNT_MUST_PRESENT("Скидка должна быть от 0 до 100", HttpStatus.BAD_REQUEST),
 
     COORDINATES_MUST_PRESENT("Координаты X Y должны присутствовать", HttpStatus.BAD_REQUEST),
-    X_BAD("Координата x должна быть > -686", HttpStatus.BAD_REQUEST),
 
     INCORRECT_FILTER("Некорректный формат фильтра, ожидается формат вида: ПОЛЕ[eq|ne|gt|lt]=ЗНАЧЕНИЕ", HttpStatus.BAD_REQUEST),
     INCORRECT_SORT("Некорректный формат сортировки", HttpStatus.BAD_REQUEST),

@@ -25,5 +25,8 @@ public interface Endpoints {
     String GET_TICKETS_TYPES = "/tickets/types";
     String GET_TICKETS_DISCOUNT_SUM = "/tickets/discount/sum";
     String GET_TICKETS_DISCOUNT_COUNT = "/tickets/discount/count";
-    String GET_TICKETS_TYPE_COUNT = "/tickets/type/count";
+    String GET_TICKETS_UNIQUE_TYPES = "/tickets/unique-types";
+
+    String GET_TICKETS_WITH_NAME_CONTAINING_SUBSTRING = "/tickets/name";
+    String FIND_TICKET_WITH_MIN_TYPE = "/tickets/min-type";
 }

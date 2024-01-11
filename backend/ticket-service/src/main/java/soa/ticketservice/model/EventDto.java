@@ -1,6 +1,5 @@
 package soa.ticketservice.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import soa.ticketservice.model.enums.EventType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -20,8 +18,7 @@ public class EventDto {
     @NotNull
     private String name;
 
-    @JsonFormat(pattern="yyyy-MM-dd")
-    private Date date;
+    private String date;
 
     private Integer minAge;
 

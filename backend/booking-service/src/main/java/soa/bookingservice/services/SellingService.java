@@ -1,13 +1,10 @@
 package soa.bookingservice.services;
 
-import soa.bookingservice.model.ErrorMessage;
+import soa.bookingservice.model.common.ErrorResponse;
 import soa.bookingservice.utils.RestClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class SellingService {
@@ -27,10 +24,9 @@ public class SellingService {
         } catch (HttpClientErrorException.UnprocessableEntity e) {
             return ResponseEntity.status(422).body(e.getResponseBodyAsString());
         } catch (Exception e) {
-            ErrorMessage err = new ErrorMessage();
-            List l = new ArrayList();
-            l.add(e.getMessage());
-            err.setErrors(l);
+            ErrorResponse err = new ErrorResponse();
+            err.setCode(504);
+            err.setMessage("Непредвиденная ошибка");
             return ResponseEntity.status(504).body(err);
         }
     }
@@ -45,10 +41,7 @@ public class SellingService {
         } catch (HttpClientErrorException.UnprocessableEntity e) {
             return ResponseEntity.status(422).body(e.getResponseBodyAsString());
         } catch (Exception e) {
-            ErrorMessage err = new ErrorMessage();
-            List l = new ArrayList();
-            l.add(e.getMessage());
-            err.setErrors(l);
+            ErrorResponse err = ErrorResponse.of(504, "Непредвиденная ошибка");
             return ResponseEntity.status(504).body(err);
         }
     }

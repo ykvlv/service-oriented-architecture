@@ -3,7 +3,9 @@ package soa.ticketservice.controller;
 import soa.ticketservice.common.Endpoints;
 import soa.ticketservice.error.ErrorDescriptions;
 import soa.ticketservice.model.CreateTicketRequest;
+import soa.ticketservice.model.Ticket;
 import soa.ticketservice.model.TicketDto;
+import soa.ticketservice.model.common.NameRequest;
 import soa.ticketservice.model.enums.TicketType;
 import soa.ticketservice.repository.FilterCriteria;
 import soa.ticketservice.repository.SortCriteria;
@@ -13,7 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 
 @RestController
@@ -53,7 +55,7 @@ public class TicketController {
             }
         }
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ROOT);
+//        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ROOT);
         var allowedFilters = List.of(
                 "id",
                 "name",
@@ -62,7 +64,6 @@ public class TicketController {
                 "creationDate",
                 "price",
                 "discount",
-                "refundable",
                 "type"
         );
 
@@ -77,9 +78,7 @@ public class TicketController {
 
                     var val = f.split("\\]", 2)[1];
                     val = val.substring(1);
-                    if (key.equals("refundable") && !(val.equals("true") | val.toLowerCase().equals("false"))){
-                        throw new Exception("Недопустимое значение refundable: должно быть одно из значений: [true, false]");
-                    } else if (key.equals("type")){
+                    if (key.equals("type")){
                         val = val.toUpperCase();
                         try {
                             TicketType.valueOf(val);
@@ -87,10 +86,11 @@ public class TicketController {
                             throw new Exception("Недопустимое значение type: должно быть одно из значений: [CHEAP, BUDGETARY, USUAL, VIP]");
                         }
                     } else if (key.equals("creationDate")) {
-                        Date date = formatter.parse(val);
-                        System.out.println(date);
-                        if (date == null){
-                            throw new Exception("Недопустимое значение creationDate: ожидается строка вида yyyy-MM-dd");
+                        try {
+                            LocalDate date = LocalDate.parse(val);
+                            System.out.println(date);
+                        } catch (Exception e) {
+                            throw new Exception("Недопустимое значение creationDate: ожидается LocalDate");
                         }
                     }
 
@@ -100,7 +100,7 @@ public class TicketController {
                             new FilterCriteria(
                                     key,
                                     op,
-                                    key.equals("refundable") ? (Boolean) val.equals("true") : key.equals("type") ? TicketType.valueOf(val) : key.equals("creationDate") ? formatter.parse(val) : val
+                                    key.equals("type") ? TicketType.valueOf(val) : key.equals("creationDate") ? LocalDate.parse(val) : val
                             )
                     );
                 }
@@ -181,8 +181,8 @@ public class TicketController {
 
 //- [] GET /tickets/discount/sum
     @GetMapping(value = Endpoints.GET_TICKETS_DISCOUNT_SUM)
-    public ResponseEntity<Double> getSumOfDiscount() {
-        return new ResponseEntity<>(ticketService.sumOfDiscount(), HttpStatus.OK);
+    public ResponseEntity<Ticket> getSumOfDiscount() {
+        return new ResponseEntity<>(ticketService.findTicketWithMinType(), HttpStatus.OK);
     }
 
 //-  GET /tickets/discount/count
@@ -193,14 +193,9 @@ public class TicketController {
 
 //- [] GET /tickets/type/count
 
-    @GetMapping(value = Endpoints.GET_TICKETS_TYPE_COUNT)
-    public ResponseEntity<Object> getTicketsTypeCount(
-            @RequestParam("type") TicketType type
-    ) {
-        if (type == null) {
-            return new ResponseEntity<>("type parameter is required", HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>(ticketService.getTicketsTypeCount(type), HttpStatus.OK);
+    @GetMapping(value = Endpoints.GET_TICKETS_UNIQUE_TYPES)
+    public ResponseEntity<Object> getTicketsUniqueTypes() {
+        return new ResponseEntity<>(ticketService.getTicketsUniqueTypes(), HttpStatus.OK);
     }
 
     @PostMapping(value = Endpoints.NEW_VIP_TICKET_BY_ID)
@@ -218,5 +213,17 @@ public class TicketController {
     ) {
         var res = ticketService.newDiscountTicketById(ticketId, discount);
         return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
+    @GetMapping(value = Endpoints.FIND_TICKET_WITH_MIN_TYPE)
+    public ResponseEntity<Object> findTicketWithMinType() {
+        return new ResponseEntity<>(ticketService.findTicketWithMinType(), HttpStatus.OK);
+    }
+
+    @GetMapping(value = Endpoints.GET_TICKETS_WITH_NAME_CONTAINING_SUBSTRING)
+    public ResponseEntity<Object> getTicketsWithNameContainingSubstring(
+            @RequestParam(name = "name") String name
+    ) {
+        return new ResponseEntity<>(ticketService.getTicketsWithNameContainingSubstring(name), HttpStatus.OK);
     }
 }

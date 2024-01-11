@@ -20,3 +20,6 @@ server:
     key-store-password: password
   # The alias mapped to the certificate
     key-alias: baeldung
+  error:
+    whitelabel:
+      enabled: false

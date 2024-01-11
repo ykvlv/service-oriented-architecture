@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Setter
 @Getter
@@ -15,7 +15,7 @@ public class Event {
     @JsonIgnoreProperties
     private Long id;
     private String name;
-    private Date date;
+    private LocalDate date;
     private Long minAge;
     private EventType eventType;
 }

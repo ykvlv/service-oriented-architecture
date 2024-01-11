@@ -2,8 +2,8 @@ package soa.ticketservice.service;
 
 
 import soa.ticketservice.model.CreateTicketRequest;
+import soa.ticketservice.model.Ticket;
 import soa.ticketservice.model.TicketDto;
-import soa.ticketservice.model.enums.TicketType;
 import soa.ticketservice.repository.FilterCriteria;
 import soa.ticketservice.repository.SortCriteria;
 
@@ -54,5 +54,9 @@ public interface TicketService {
 
     Object sumOfDiscountCount();
 
-    Object getTicketsTypeCount(TicketType type);
+    Object getTicketsUniqueTypes();
+
+    List<Ticket> getTicketsWithNameContainingSubstring(String substring);
+
+    Ticket findTicketWithMinType();
 }

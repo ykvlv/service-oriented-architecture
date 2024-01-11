@@ -1,12 +1,13 @@
 package soa.ticketservice.model;
 
 
+import lombok.NonNull;
 import soa.ticketservice.model.enums.TicketType;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * Сущность Ticket.
@@ -30,44 +31,42 @@ public class Ticket {
      */
     @Column(name = "name")
     @Lob
+    @NonNull
     private String name;
 
     /**
      * Координата X.
      */
     @Column(name = "coordinate_x")
-    private Integer coordinateX;
+    @NonNull
+    private Long coordinateX;
 
     /**
      * Координата Y.
      */
     @Column(name = "coordinate_y")
-    private Float coordinateY;
+    @NonNull
+    private Integer coordinateY;
 
     /**
      * Дата создания.
      */
     @Column(name = "creation_date")
-    private Date creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
+    private LocalDate creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
 
     /**
      * Цена.
      */
     @Column(name = "price")
+    @NonNull
     private Double price; //Значение поля должно быть больше 0
 
     /**
      * Скидка.
      */
     @Column(name = "discount")
+    @NonNull
     private Double discount; //Поле не может быть null, Значение поля должно быть больше 0, Максимальное значение поля: 100
-
-    /**
-     *
-     */
-    @Column(name = "refundable")
-    private Boolean refundable; //Поле не может быть null
-
 
     /**
      * Тип билета.
@@ -81,4 +80,19 @@ public class Ticket {
     @ManyToOne
     @JoinColumn(name="event_id")
     private Event event;  //Поле не может быть null
+
+    @Override
+    public String toString() {
+        return "Ticket{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", coordinateX=" + coordinateX +
+                ", coordinateY=" + coordinateY +
+                ", creationDate=" + creationDate +
+                ", price=" + price +
+                ", discount=" + discount +
+                ", type=" + type +
+                ", event=" + event +
+                '}';
+    }
 }

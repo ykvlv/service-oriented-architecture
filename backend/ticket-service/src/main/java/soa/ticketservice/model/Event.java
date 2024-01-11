@@ -1,12 +1,13 @@
 package soa.ticketservice.model;
 
 
+import lombok.NonNull;
 import soa.ticketservice.model.enums.EventType;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * Сущность Event.
@@ -23,14 +24,17 @@ public class Event {
 
     @Column(name = "name")
     @Lob
+    @NonNull
     private String name;
 
     @Column(name = "date")
-    private Date date;
+    private LocalDate date;
 
     @Column(name = "min_age")
+    @NonNull
     private Integer minAge;
 
     @Column(name = "event_type")
+    @NonNull
     private EventType eventType;
 }

@@ -91,7 +91,7 @@
       [:div {:class (c :text-l)} (str min-age-sub)]
 
       [components/input-with-init-value id [:eventType] "Тип мероприятия" "event-type"
-       "CONCERT, STANDUP, OPERA, THEATRE_PERFORMANCE" false
+       "CONCERT, STANDUP, OPERA, THEATRE_PERFORMANCE" true
        event-types]
       [:div {:class (c :text-l)} (str type-sub)]]]))
 

@@ -80,7 +80,6 @@
         creationdate-sub @(subscribe [::subs/form-path-invalid-message [:creationDate]])
         price-sub @(subscribe [::subs/form-path-invalid-message [:price]])
         discount-sub @(subscribe [::subs/form-path-invalid-message [:discount]])
-        refundable-sub @(subscribe [::subs/form-path-invalid-message [:refundable]])
         type-sub @(subscribe [::subs/form-path-invalid-message [:type]])
         eventid-sub @(subscribe [::subs/form-path-invalid-message [:eventId]])
         ticket-types @(subscribe [::subs/ticket-types])]
@@ -90,10 +89,10 @@
       [:div [components/input-with-init-value id [:name] "Название" "name" nil true]
        [:div {:class (c :text-l)} (str name-sub)]]
 
-      [:div [components/input-with-init-value id [:coordinates :x] "Координата x" "coordinates-x" "(x > - 686)" true]
+      [:div [components/input-with-init-value id [:coordinates :x] "Координата x" "coordinates-x" "(целое число)" true]
        [:div {:class (c :text-l)} (str x-sub)]]
 
-      [:div [components/input-with-init-value id [:coordinates :y] "Координата y" "coordinates-y" "целое число" true]
+      [:div [components/input-with-init-value id [:coordinates :y] "Координата y" "coordinates-y" "(целое число)" true]
        [:div {:class (c :text-l)} (str y-sub)]]
 
       [:div [components/input-with-init-value id [:creationDate] "Дата создания" "creation-date" "YYYY-MM-DD" true]
@@ -104,9 +103,6 @@
 
       [:div [components/input-with-init-value id [:discount] "Скидка" "discount" "(от 0 до 100)" true]
        [:div {:class (c :text-l)} (str discount-sub)]]
-
-      [:div [components/input-with-init-value id [:refundable] "Возвратный" "refundable" "true/false" true [{:value true :desc "Да"} {:value false :desc "Нет"}]]
-       [:div {:class (c :text-l)} (str refundable-sub)]]
 
       [:div [components/input-with-init-value id [:type] "Тип" "type" "VIP, USUAL, BUDGETARY, CHEAP" false
              ticket-types]
@@ -157,8 +153,7 @@
                :title (:name ticket)} 
         (str "Название билета: " 
              (if (> (count (:name ticket)) 15)
-               (str (apply str (take 15 (:name ticket))) "...") (:name ticket)))]
-       [:div {:class (c :text-sm)} (if (:refundable ticket) "Возвратный" "Невозвратный")]]
+               (str (apply str (take 15 (:name ticket))) "...") (:name ticket)))]]
       [:div  {:class (c [:w-max 100])}
        [:div
         "СКИДКА: " (:discount ticket) "%"]
@@ -190,13 +185,10 @@
     [:div
      {:class (c :grid [:grid-cols 2])}
      [ticket-new-prop [:name]           "Название" "name" nil true]
-     [ticket-new-prop [:coordinates :x] "Координата x" "coordinates-x" "(x > - 686)" true]
+     [ticket-new-prop [:coordinates :x] "Координата x" "coordinates-x" "(целое число)" true]
      [ticket-new-prop [:coordinates :y] "Координата y" "coordinates-y" "(целое число)" true]
      [ticket-new-prop [:price]          "Цена" "price" "(> 0)" true]
      [ticket-new-prop [:discount]       "Скидка" "discount" "(от 0 до 100)" true]
-     [ticket-new-prop [:refundable]     "Возвратный" "refundable" nil true
-      [{:value true :desc "Да"}
-       {:value false :desc "Нет"}] nil]
      [ticket-new-prop [:type]           "Тип" "type" "" false
       ticket-types]
      [ticket-new-prop [:eventId]        "Мероприятие" "eventId" "" true
@@ -220,16 +212,6 @@
    [:div "Дата создания:" (get-in ticket [:creationDate])]
    [:div "Цена: " (get-in ticket [:price])]
    [:div "Скидка: " (get-in ticket [:discount])]
-   [:div "Возвратный: "
-    (cond
-      (nil?  (get-in ticket [:refundable]))
-      "-"
-
-      (false?  (get-in ticket [:refundable]))
-      "Нет"
-
-      (true?  (get-in ticket [:refundable]))
-      "Да")]
    [:div "Тип: " (get-in ticket [:type])]
    [:div "Мероприятие: "  (get-in ticket [:eventId])]])
 

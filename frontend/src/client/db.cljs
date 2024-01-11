@@ -6,7 +6,6 @@
    :name {:value "" :shown true}
    :x {:value "" :shown true}
    :y {:value "" :shown true}
-   :refundable {:value "" :shown true}
    :type {:value "" :shown true}
    :eventId  {:value "" :shown true}}
 

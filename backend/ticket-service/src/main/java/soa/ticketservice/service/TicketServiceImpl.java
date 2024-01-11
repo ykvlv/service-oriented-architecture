@@ -24,7 +24,11 @@ import soa.ticketservice.repository.SortCriteria;
 import soa.ticketservice.repository.TicketRepository;
 import soa.ticketservice.repository.TicketSpecification;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -47,11 +51,6 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public TicketDto createTicket(CreateTicketRequest request) {
-        if (request.getRefundable() == null) {
-            throw ErrorDescriptions.REFUNDABLE_MUST_PRESENT.exception();
-        }
-
-
         if (request.getCoordinates() == null ||
                 request.getCoordinates().getX() == null ||
                 request.getCoordinates().getY() == null
@@ -59,23 +58,28 @@ public class TicketServiceImpl implements TicketService {
             throw ErrorDescriptions.COORDINATES_MUST_PRESENT.exception();
         }
 
-        if (request.getCoordinates().getX() <= -686L) {
-            throw ErrorDescriptions.X_BAD.exception();
-        }
-
-        if (request.getDiscount() == null || request.getDiscount() < 1 || request.getDiscount() > 100) {
+        if (request.getDiscount() == null || request.getDiscount() < 0 || request.getDiscount() > 100) {
             throw ErrorDescriptions.DISCOUNT_MUST_PRESENT.exception();
         }
+
+        if (request.getName() == null) {
+            throw ErrorDescriptions.NAME_MUST_PRESENT.exception();
+        }
+
+        if (request.getPrice() == null || request.getPrice() <= 0) {
+            throw ErrorDescriptions.PRICE_MUST_PRESENT.exception();
+        }
+
+
 
 
         Ticket ticket = new Ticket();
         ticket.setName(request.getName());
         ticket.setCoordinateX(request.getCoordinates().getX());
         ticket.setCoordinateY(request.getCoordinates().getY());
-        ticket.setCreationDate(new Date());
+        ticket.setCreationDate(LocalDate.now());
         ticket.setPrice(request.getPrice());
         ticket.setDiscount(request.getDiscount());
-        ticket.setRefundable(request.getRefundable());
         ticket.setType(request.getType());
 
         TicketDto createdTicket = new TicketDto();
@@ -93,7 +97,7 @@ public class TicketServiceImpl implements TicketService {
             } else {  // create a new one
                 EventDto newEvent = eventService.createEvent(CreateEventRequest.of(
                         request.getEvent().getName(),
-                        request.getEvent().getDate(),
+                        LocalDateTime.parse(request.getEvent().getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")).toLocalDate(),
                         request.getEvent().getMinAge(),
                         request.getEvent().getEventType(),
                         request.getEvent().getId()
@@ -109,10 +113,9 @@ public class TicketServiceImpl implements TicketService {
         createdTicket.setId(ticket.getId());
         createdTicket.setName(ticket.getName());
         createdTicket.setCoordinates(Coordinates.of(ticket.getCoordinateX(), ticket.getCoordinateY()));
-        createdTicket.setCreationDate(Date.from(ticket.getCreationDate().toInstant()));
+        createdTicket.setCreationDate(ticket.getCreationDate().atStartOfDay().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")));
         createdTicket.setPrice(ticket.getPrice());
         createdTicket.setDiscount(ticket.getDiscount());
-        createdTicket.setRefundable(ticket.getRefundable());
         createdTicket.setType(ticket.getType());
         return createdTicket;
     }
@@ -136,8 +139,8 @@ public class TicketServiceImpl implements TicketService {
 						case "eq" ->
 								ticketsStream.filter(ticket -> {
                                     if (ticket.getCreationDate() == null) return false;
-                                    Long curdate = (ticket.getCreationDate().getTime()-86400000L) /86400000L;
-                                    Long needdate = ((Date) f.getValue()).getTime()/86400000L;
+                                    Long curdate = ticket.getCreationDate().toEpochDay();
+                                    Long needdate = ((LocalDate) f.getValue()).toEpochDay();
 
                                     var eq = curdate.compareTo(needdate);
 									return eq == 0;
@@ -145,8 +148,8 @@ public class TicketServiceImpl implements TicketService {
 						case "ne" ->
                                 ticketsStream.filter(ticket -> {
                                     if (ticket.getCreationDate() == null) return false;
-                                    Long curdate = (ticket.getCreationDate().getTime()-86400000L) /86400000L;
-                                    Long needdate = ((Date) f.getValue()).getTime()/86400000L;
+                                    Long curdate = ticket.getCreationDate().toEpochDay();
+                                    Long needdate = ((LocalDate) f.getValue()).toEpochDay();
 
                                     var eq = curdate.compareTo(needdate);
                                     return eq != 0;
@@ -154,16 +157,16 @@ public class TicketServiceImpl implements TicketService {
 						case "gt" ->
                                 ticketsStream.filter(ticket -> {
                                     if (ticket.getCreationDate() == null) return false;
-                                    Long curdate = (ticket.getCreationDate().getTime()-86400000L) /86400000L;
-                                    Long needdate = ((Date) f.getValue()).getTime()/86400000L;
+                                    Long curdate = ticket.getCreationDate().toEpochDay();
+                                    Long needdate = ((LocalDate) f.getValue()).toEpochDay();
 
                                     var eq = curdate.compareTo(needdate);
                                     return eq > 0;
                                 });
 						default -> ticketsStream.filter(ticket -> {
                             if (ticket.getCreationDate() == null) return false;
-                            Long curdate = (ticket.getCreationDate().getTime()-86400000L) /86400000L;
-                            Long needdate = ((Date) f.getValue()).getTime()/86400000L;
+                            Long curdate = ticket.getCreationDate().toEpochDay();
+                            Long needdate = ((LocalDate) f.getValue()).toEpochDay();
 
                             var eq = curdate.compareTo(needdate);
                             return eq < 0;
@@ -229,11 +232,14 @@ public class TicketServiceImpl implements TicketService {
                     switch (sortCriteria.getKey()) {
                         case "id" -> currentComp = Comparator.comparing(Ticket::getId);
                         case "name" -> currentComp = Comparator.comparing(Ticket::getName);
-                        case "coordinateX" -> currentComp = Comparator.comparing(Ticket::getCoordinateX);
-                        case "coordinateY" -> currentComp = Comparator.comparing(Ticket::getCoordinateY);
-                        case "creationDate" -> currentComp = Comparator.comparing(Ticket::getCreationDate);
+                        case "x" -> currentComp = Comparator.comparing(Ticket::getCoordinateX);
+                        case "y" -> currentComp = Comparator.comparing(Ticket::getCoordinateY);
+                        case "creationDate" -> currentComp = desc
+                                ? Comparator.comparing(Ticket::getCreationDate, Comparator.nullsFirst(Comparator.naturalOrder()))
+                                : Comparator.comparing(Ticket::getCreationDate, Comparator.nullsLast(Comparator.naturalOrder()));
                         case "price" -> currentComp = Comparator.comparing(Ticket::getPrice);
                         case "discount" -> currentComp = Comparator.comparing(Ticket::getDiscount);
+                        case "type" -> currentComp = Comparator.comparing(Ticket::getType);
                         default -> throw ErrorDescriptions.INCORRECT_SORT.exception();
                     }
                     if (desc) currentComp = currentComp.reversed();
@@ -245,11 +251,13 @@ public class TicketServiceImpl implements TicketService {
                 }
                 if (c != null) ticketsStream = ticketsStream.sorted(c);
             }
-            return ticketsStream
+            var ts = ticketsStream
                     .skip(offset)
                     .limit(limit)
                    .map(ticketModelMapper::map)
                    .collect(Collectors.toList());
+            System.out.println(ts);
+            return ts;
         } catch (InvalidDataAccessApiUsageException exc){
             throw new Exception("В фильтре передано недопустимое значение для сравнения");
         }
@@ -276,7 +284,6 @@ public class TicketServiceImpl implements TicketService {
                 Coordinates.of(ticket.getCoordinateX(), ticket.getCoordinateY()),
                 ticket.getPrice() * 2,
                 ticket.getDiscount(),
-                ticket.getRefundable(),
                 TicketType.VIP,
                 eventModelMapper.map(ticket.getEvent()),
                 ticket.getId(),
@@ -297,7 +304,6 @@ public class TicketServiceImpl implements TicketService {
                 Coordinates.of(ticket.getCoordinateX(), ticket.getCoordinateY()),
                 ticket.getPrice() * (1 - discount / 100.0),
                 discount,
-                ticket.getRefundable(),
                 ticket.getType(),
                 eventModelMapper.map(ticket.getEvent()),
                 ticket.getId(),
@@ -320,11 +326,7 @@ public class TicketServiceImpl implements TicketService {
             throw ErrorDescriptions.TICKET_NOT_FOUND.exception();
         }
 
-        if (request.getRefundable() == null) {
-            throw ErrorDescriptions.REFUNDABLE_MUST_PRESENT.exception();
-        }
-
-        if (request.getDiscount() == null || request.getDiscount() < 1 || request.getDiscount() > 100) {
+        if (request.getDiscount() == null || request.getDiscount() < 0 || request.getDiscount() > 100) {
             throw ErrorDescriptions.DISCOUNT_MUST_PRESENT.exception();
         }
 
@@ -335,20 +337,14 @@ public class TicketServiceImpl implements TicketService {
             throw ErrorDescriptions.COORDINATES_MUST_PRESENT.exception();
         }
 
-        if (request.getCoordinates().getX() <= -686L) {
-            throw ErrorDescriptions.X_BAD.exception();
-        }
-
-
         Ticket updatedTicket = new Ticket();
         updatedTicket.setId(ticketId);
         updatedTicket.setName(request.getName());
         updatedTicket.setCoordinateX(request.getCoordinates().getX());
         updatedTicket.setCoordinateY(request.getCoordinates().getY());
-        updatedTicket.setCreationDate(new Date());
+        updatedTicket.setCreationDate(LocalDate.now());
         updatedTicket.setPrice(request.getPrice());
         updatedTicket.setDiscount(request.getDiscount());
-        updatedTicket.setRefundable(request.getRefundable());
         updatedTicket.setType(request.getType());
 
         TicketDto createdTicket = new TicketDto();
@@ -366,7 +362,7 @@ public class TicketServiceImpl implements TicketService {
             } else {  // create a new one
                 EventDto newEvent = eventService.createEvent(CreateEventRequest.of(
                         request.getEvent().getName(),
-                        request.getEvent().getDate(),
+                        LocalDateTime.parse(request.getEvent().getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")).toLocalDate(),
                         request.getEvent().getMinAge(),
                         request.getEvent().getEventType(),
                         request.getEvent().getId()
@@ -415,23 +411,42 @@ public class TicketServiceImpl implements TicketService {
 //        ]
         var groupedByDiscount = StreamSupport.stream(all.spliterator(), false)
                 .collect(groupingBy(
-                        Ticket::getDiscount
+                        e -> e.getType().getValue()
                 ));
-        var res = new ArrayList<Map<String, Number>>();
+        var res = new ArrayList<Map<String, Serializable>>();
 
         for(var t : groupedByDiscount.entrySet()){
             var hueta =
-                    Map.of("discount", t.getKey(), "count", (Number) t.getValue().size());
+                    Map.of("discount", TicketType.getType(t.getKey()), "count", (Number) t.getValue().size());
             res.add(hueta);
         }
         return res;
     }
 
     @Override
-    public Long getTicketsTypeCount(TicketType ticketType) {
-        var all = ticketRepository.findAll();
-        return StreamSupport.stream(all.spliterator(), false)
-                .filter(ticket -> ticket.getType() != null && ticket.getType().getValue() < ticketType.getValue())
-                .count();
+    public Map<String, Integer> getTicketsUniqueTypes() {
+        List<Integer> all = ticketRepository.findDistinctTypesWithCount();
+        Map<String, Integer> map = new HashMap<>();
+        for (int i = 0; i < all.size(); i++) {
+            map.put(TicketType.getType(i+1).name(), all.get(i));
+        }
+        return map;
+    }
+
+    @Override
+    public List<Ticket> getTicketsWithNameContainingSubstring(String substring) {
+        List<Ticket> allTickets = ticketRepository.findAll();
+
+        return allTickets.stream()
+                .filter(ticket -> ticket.getName().contains(substring))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Ticket findTicketWithMinType() {
+        return ticketRepository.findAll().stream()
+                .filter(ticket -> Objects.nonNull(ticket.getType()))
+                .min(Comparator.comparingInt(ticket -> ticket.getType().getValue()))
+                .orElse(null);
     }
 }

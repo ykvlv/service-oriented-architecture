@@ -8,6 +8,6 @@ import lombok.experimental.Accessors;
 @Getter
 @Accessors(chain = true)
 public class CoordinatesDto {
-    private Integer x;
-    private Float y;
+    private Long x;
+    private Integer y;
 }
