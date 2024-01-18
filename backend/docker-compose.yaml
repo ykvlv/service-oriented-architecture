@@ -1,0 +1,56 @@
+version: '3.7'
+name: soa
+services:
+  database_postgres:
+    image: postgres:13.3
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=postgres
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - '5432:5432'
+    networks:
+      - backend-network
+
+  ticket-service:
+    build:
+      context: ticket-service
+      dockerfile: Dockerfile
+    depends_on:
+      - database_postgres
+    environment:
+      - PORT=9099
+    ports:
+      - '9099:9099'
+    networks:
+      - backend-network
+
+  duplicate-ticket-service:
+    build:
+      context: ticket-service
+      dockerfile: Dockerfile
+    depends_on:
+      - database_postgres
+    environment:
+      - PORT=9199
+    ports:
+      - '9199:9199'
+    networks:
+      - backend-network
+
+  consul:
+    image: consul:1.9.3
+    ports:
+      - '8500:8500'
+      - '8600:8600/udp'
+    volumes:
+      - ./consul.config.json:/etc/consul.d/consul.config.json
+    command: consul agent -dev -config-dir /etc/consul.d
+    networks:
+      - backend-network
+
+networks:
+  backend-network:
+    driver: bridge
