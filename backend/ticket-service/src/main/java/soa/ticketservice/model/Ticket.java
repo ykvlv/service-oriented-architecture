@@ -30,7 +30,6 @@ public class Ticket {
      * Название.
      */
     @Column(name = "name")
-    @Lob
     @NonNull
     private String name;
 
@@ -59,7 +58,7 @@ public class Ticket {
      */
     @Column(name = "price")
     @NonNull
-    private Double price; //Значение поля должно быть больше 0
+    private Integer price; //Значение поля должно быть больше 0
 
     /**
      * Скидка.

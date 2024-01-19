@@ -32,7 +32,7 @@ CREATE TABLE public.event (
                               date date,
                               event_type integer,
                               min_age integer,
-                              name oid
+                              name text
 );
 
 --
@@ -45,9 +45,9 @@ CREATE TABLE public.ticket (
                                coordinate_x bigint,
                                coordinate_y integer,
                                creation_date date,
-                               discount double precision,
-                               name oid,
-                               price double precision,
+                               discount integer,
+                               name text,
+                               price integer,
                                type integer,
                                event_id bigint
 );
@@ -59,8 +59,8 @@ CREATE TABLE public.ticket (
 --
 
 COPY public.event (id, date, event_type, min_age, name) FROM stdin;
-10006	2024-01-11	2	12	275984
-10007	2024-01-11	0	18	275985
+10006	2024-01-11	2	12	УРА
+10007	2024-01-11	0	18	ПРИКОЛ
 \.
 
 
@@ -71,9 +71,9 @@ COPY public.event (id, date, event_type, min_age, name) FROM stdin;
 --
 
 COPY public.ticket (id, coordinate_x, coordinate_y, creation_date, discount, name, price, type, event_id) FROM stdin;
-10007	11	11	2024-01-11	11	275988	11	1	7
-10016	23423	-234	2024-01-11	0	275998	1	2	6
-10018	23423	-234	2024-01-11	0	276000	1	2	6
+10007	11	11	2024-01-11	11	ОДИН	11	1	10007
+10016	23423	-234	2024-01-11	0	ДВА	1	2	10006
+10018	23423	-234	2024-01-11	0	ТРИ	1	2	10006
 \.
 
 
@@ -110,3 +110,5 @@ ALTER TABLE ONLY public.ticket
 -- PostgreSQL database dump complete
 --
 
+CREATE SEQUENCE public.ticket_seq;
+CREATE SEQUENCE public.event_seq;

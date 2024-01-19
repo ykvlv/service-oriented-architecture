@@ -21,6 +21,13 @@ import java.util.*;
 public class EventController {
     private final EventService eventService;
 
+    @PostMapping(value = "/ping")
+    public ResponseEntity<String> ping() {
+        return ResponseEntity.ok(
+                "Это Тикет Сервис. Порт " + System.getenv("RUNNING_PORT") + "!"
+        );
+    }
+
     @PostMapping(value = Endpoints.CREATE_EVENT)
     public ResponseEntity<EventDto> createEvent(
             @RequestBody CreateEventRequest request

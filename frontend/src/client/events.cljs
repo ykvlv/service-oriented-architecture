@@ -7,9 +7,9 @@
    [clojure.string :as str]
    [client.db :as db]))
 
-(def back-url "https://localhost:8080")
+(def back-url "https://localhost:9200")
 
-(def back-2-url "https://localhost:9090")
+(def back-2-url "https://localhost:9202")
 
 (defn full-url [endpoint]
   (str back-url endpoint))
@@ -253,7 +253,7 @@
                  :y parse-long}
    :type #(if (= "" %) nil %)
    :eventId parse-long
-   :price parse-double
+   :price parse-long
    :discount parse-double})
 
 (def hack-event

@@ -14,7 +14,7 @@ public class TicketDto {
     private String name;
     private Coordinates coordinates;
     private String creationDate;
-    private Double price;
+    private Integer price;
     private Double discount;
     private TicketType type;
     private EventDto event;

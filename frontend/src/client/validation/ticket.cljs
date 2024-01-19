@@ -26,10 +26,9 @@
              (integer? %)))
 
 (s/def ::coordinates (s/keys :req-un [::x ::y]))
-(s/def ::price
-  #(or
-    (and (number? %) (pos? %))
-    (and (some? %) (pos? (parse-double %)))))
+(s/def ::price #(or
+                  (and (string? %) (parse-long %))
+                  (integer? %)))
 
 ; скидка от 0 до 100 включительно
 (s/def ::discount

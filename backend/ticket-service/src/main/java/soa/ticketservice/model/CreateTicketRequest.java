@@ -16,7 +16,7 @@ import java.time.LocalDate;
 public class CreateTicketRequest {
     private String name;
     private Coordinates coordinates;
-    private Double price;
+    private Integer price;
     private Double discount;
     private TicketType type;
     private EventDto event;

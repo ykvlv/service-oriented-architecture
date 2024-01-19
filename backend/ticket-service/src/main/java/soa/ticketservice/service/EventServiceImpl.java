@@ -45,7 +45,7 @@ public class EventServiceImpl implements EventService {
     public EventDto createEvent(CreateEventRequest request) {
         Event event = new Event();
         event.setName(request.getName());
-        event.setDate(request.getDate());
+        event.setDate(LocalDate.parse(request.getDate().substring(0, 10)));
         event.setMinAge(request.getMinAge());
         event.setEventType(request.getEventType());
         eventRepository.save(event);
@@ -201,7 +201,7 @@ public class EventServiceImpl implements EventService {
         Event updatedEvent = new Event();
         updatedEvent.setId(eventId);
         updatedEvent.setName(request.getName());
-        updatedEvent.setDate(request.getDate());
+        updatedEvent.setDate(LocalDate.parse(request.getDate().substring(0, 10)));
         updatedEvent.setMinAge(request.getMinAge());
         updatedEvent.setEventType(request.getEventType());
 

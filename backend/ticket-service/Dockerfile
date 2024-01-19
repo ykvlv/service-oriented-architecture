@@ -9,4 +9,4 @@ COPY target/ticket-service.jar /app/
 COPY src/main/resources/keystore/orgdirectory.jks /app/certs/orgdirectory.jks
 
 # Команда для запуска приложения при старте контейнера
-CMD ["java", "-jar", "-Dport=${PORT}", "ticket-service.jar"]
+CMD ["java", "-jar", "ticket-service.jar"]
