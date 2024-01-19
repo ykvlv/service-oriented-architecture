@@ -29,7 +29,7 @@ public interface OrgdirectoryApi {
             @ApiResponse(responseCode = "400", description = "Запрос не удался", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDTO.class))),
 
             @ApiResponse(responseCode = "500", description = "Ошибка сервера", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDTO.class)))})
-    @RequestMapping(value = "/orgdirectory/vip/{ticket-id}/{person-id}",
+    @RequestMapping(value = "/booking/sell/vip/{ticket-id}/{person-id}",
             produces = { "application/json" },
             method = RequestMethod.POST)
     ResponseEntity<?> increaseStepsCount(
@@ -47,7 +47,7 @@ public interface OrgdirectoryApi {
             @ApiResponse(responseCode = "400", description = "Запрос не удался", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDTO.class))),
 
             @ApiResponse(responseCode = "500", description = "Ошибка сервера", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDTO.class)))})
-    @RequestMapping(value = "/orgdirectory/discount/{ticket-id}/{person-id}/{discount}",
+    @RequestMapping(value = "/booking/sell/discount/{ticket-id}/{person-id}/{discount}",
             produces = { "application/json" },
             method = RequestMethod.POST)
     ResponseEntity<?> makeDiscount(
