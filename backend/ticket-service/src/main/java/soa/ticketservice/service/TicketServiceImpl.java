@@ -97,7 +97,7 @@ public class TicketServiceImpl implements TicketService {
             } else {  // create a new one
                 EventDto newEvent = eventService.createEvent(CreateEventRequest.of(
                         request.getEvent().getName(),
-                        LocalDateTime.parse(request.getEvent().getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")).toLocalDate(),
+                        LocalDateTime.parse(request.getEvent().getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")).toLocalDate().toString(),
                         request.getEvent().getMinAge(),
                         request.getEvent().getEventType(),
                         request.getEvent().getId()
@@ -302,7 +302,7 @@ public class TicketServiceImpl implements TicketService {
         TicketDto newVipTicket = createTicket(CreateTicketRequest.of(
                 ticket.getName(),
                 Coordinates.of(ticket.getCoordinateX(), ticket.getCoordinateY()),
-                ticket.getPrice() * (1 - discount / 100.0),
+				(int) (ticket.getPrice() * (1 - discount / 100.0)),
                 discount,
                 ticket.getType(),
                 eventModelMapper.map(ticket.getEvent()),
@@ -362,7 +362,7 @@ public class TicketServiceImpl implements TicketService {
             } else {  // create a new one
                 EventDto newEvent = eventService.createEvent(CreateEventRequest.of(
                         request.getEvent().getName(),
-                        LocalDateTime.parse(request.getEvent().getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")).toLocalDate(),
+                        LocalDateTime.parse(request.getEvent().getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")).toLocalDate().toString(),
                         request.getEvent().getMinAge(),
                         request.getEvent().getEventType(),
                         request.getEvent().getId()

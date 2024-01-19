@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @AllArgsConstructor(staticName = "of")
 public class CreateEventRequest {
     private String name;
-    private LocalDate date;
+    private String date;
     private Integer minAge;
     private EventType eventType;
     private Long id;

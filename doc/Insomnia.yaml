@@ -1,0 +1,585 @@
+_type: export
+__export_format: 4
+__export_date: 2024-01-19T13:51:39.376Z
+__export_source: insomnia.desktop.app:v8.3.0
+resources:
+  - _id: req_e0520ce8ef1e4e85819c89fdb05a0110
+    parentId: fld_c8486b243a82490b9185004c33210769
+    modified: 1705672080665
+    created: 1705672051620
+    url: https://localhost:9202/booking/sell/discount/10007/1/10
+    name: create discounted ticket
+    description: ""
+    method: POST
+    body: {}
+    parameters: []
+    headers:
+      - name: User-Agent
+        value: insomnia/8.3.0
+    authentication: {}
+    metaSortKey: -1705672051620
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_c8486b243a82490b9185004c33210769
+    parentId: wrk_9f59ccbe43a94a34b79ef0a5cc5b9bdd
+    modified: 1705671913675
+    created: 1705671913675
+    name: BookingService
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1705671913675
+    _type: request_group
+  - _id: wrk_9f59ccbe43a94a34b79ef0a5cc5b9bdd
+    parentId: null
+    modified: 1705672284231
+    created: 1702987256721
+    name: soa
+    description: ""
+    scope: design
+    _type: workspace
+  - _id: req_8429ce5c08a04917bf1327af298ba2a5
+    parentId: fld_c8486b243a82490b9185004c33210769
+    modified: 1705672030475
+    created: 1699187719751
+    url: https://localhost:9202/booking/sell/vip/10007/1
+    name: create vip ticket
+    description: ""
+    method: POST
+    body: {}
+    parameters: []
+    headers:
+      - name: User-Agent
+        value: insomnia/8.1.0
+    authentication: {}
+    metaSortKey: -1705671925288
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_ffa08fefb1114fd88aab71e82aab0efc
+    parentId: fld_5fc9e9a7a8324ca6a619b0a4f0e8f2d8
+    modified: 1705671700473
+    created: 1705651962991
+    url: https://localhost:9200/ping
+    name: ping
+    description: ""
+    method: POST
+    body: {}
+    parameters: []
+    headers:
+      - name: User-Agent
+        value: insomnia/8.3.0
+    authentication: {}
+    metaSortKey: -1705651989685
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_5fc9e9a7a8324ca6a619b0a4f0e8f2d8
+    parentId: wrk_9f59ccbe43a94a34b79ef0a5cc5b9bdd
+    modified: 1705652031574
+    created: 1705651955948
+    name: TicketService
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1705651955948
+    _type: request_group
+  - _id: req_15826b9cd3f2468b8e1adb1eb4a99e45
+    parentId: fld_fc8cf4ced58e46a1819e85ffde73deda
+    modified: 1705671856551
+    created: 1696765658438
+    url: https://localhost:9200/events
+    name: get all events
+    description: ""
+    method: GET
+    body: {}
+    parameters:
+      - id: pair_81f2aea187284fdd98e5a1b247ae3bcc
+        name: filter
+        value: id[ne]=5
+        description: ""
+        disabled: true
+      - id: pair_b82eea2e715040e5aee2df6ffbc5b20e
+        name: filter
+        value: minAge[gt]=12
+        description: ""
+        disabled: true
+      - id: pair_32de340c78ce4ce1af0af068339c6aa8
+        name: sort
+        value: id
+        description: ""
+        disabled: true
+      - id: pair_34482be9602648bf8fbbc0c41089d3c1
+        name: limit
+        value: "2"
+        description: ""
+        disabled: true
+      - id: pair_1e128d74bda544b0a9df50707b5dd4a1
+        name: offset
+        value: "1"
+        description: ""
+        disabled: true
+    headers:
+      - name: User-Agent
+        value: insomnia/8.1.0
+    authentication: {}
+    metaSortKey: -1705671692289
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_fc8cf4ced58e46a1819e85ffde73deda
+    parentId: fld_5fc9e9a7a8324ca6a619b0a4f0e8f2d8
+    modified: 1705671806070
+    created: 1705671686073
+    name: Event
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1705651989683.4375
+    _type: request_group
+  - _id: req_e0a472e2ea554afeaf9acab01a88f26b
+    parentId: fld_fc8cf4ced58e46a1819e85ffde73deda
+    modified: 1705671872361
+    created: 1696765628027
+    url: https://localhost:9200/events/1
+    name: get event by id
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers:
+      - name: User-Agent
+        value: insomnia/8.1.0
+    authentication: {}
+    metaSortKey: -1705671692239
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_2519ffc6ebcb467cbfcead4836f103b6
+    parentId: fld_fc8cf4ced58e46a1819e85ffde73deda
+    modified: 1705671692243
+    created: 1696765523521
+    url: https://localhost:9200/events
+    name: create event
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "name": "Концерт Новый",
+          "date": "2023-12-13T00:00:00.000Z",
+          "minAge": 12,
+          "eventType": "CONCERT"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/8.1.0
+    authentication: {}
+    metaSortKey: -1705671692189
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_c205480dbb2940ab840571316d2b3606
+    parentId: fld_fc8cf4ced58e46a1819e85ffde73deda
+    modified: 1705671866808
+    created: 1696934123335
+    url: https://localhost:9200/events/1
+    name: update event by id
+    description: ""
+    method: PUT
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "name": "Концерт Доры",
+          "date": "2023-12-13",
+          "minAge": 12,
+          "eventType": "CONCERT"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/8.1.0
+    authentication: {}
+    metaSortKey: -1705671692139
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_1422fc4e2dd341b68c1722bb4842c89e
+    parentId: fld_fc8cf4ced58e46a1819e85ffde73deda
+    modified: 1705671887668
+    created: 1696798807275
+    url: https://localhost:9200/events/1
+    name: delete event by id
+    description: ""
+    method: DELETE
+    body:
+      mimeType: application/json
+      text: ""
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/8.1.0
+    authentication: {}
+    metaSortKey: -1705671692039
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_675c8d47db36465cbe47ffe78df62698
+    parentId: fld_2d63446e2f44402cabdd2064d5e627cb
+    modified: 1705671765519
+    created: 1696765514564
+    url: https://localhost:9200/tickets
+    name: get all tickets
+    description: ""
+    method: GET
+    body: {}
+    parameters:
+      - id: pair_e379a94ddc3345b2a850c2bc13317755
+        name: sort
+        value: -id
+        description: ""
+        disabled: true
+      - id: pair_41ce2f6d646743bb86525fb96f007adc
+        name: filter
+        value: refundable[eq]=true
+        description: ""
+        disabled: true
+      - id: pair_1bc3f8aa0a5444af8f521750cdc2ec27
+        name: sort
+        value: id
+        description: ""
+        disabled: true
+      - id: pair_e68e0efc7c454724a86bbc5530c0a8ff
+        name: filter
+        value: id[ne]=1
+        description: ""
+        disabled: true
+      - id: pair_4f57b8fd274143ab84fd398e2fefb02e
+        name: sort
+        value: name
+        description: ""
+        disabled: true
+      - id: pair_609b475e1c0e4596a3ef03b2dbc412cf
+        name: filter
+        value: type[gt]=USUAL
+        description: ""
+        disabled: true
+      - id: pair_f748fb3a21c044fc87a88df951d19236
+        name: limit
+        value: "3"
+        description: ""
+        disabled: true
+      - id: pair_3bf610e61eca46f59f7db75097d0f031
+        name: offset
+        value: "1"
+        description: ""
+        disabled: true
+    headers:
+      - name: User-Agent
+        value: insomnia/8.1.0
+    authentication: {}
+    metaSortKey: -1705671726386
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_2d63446e2f44402cabdd2064d5e627cb
+    parentId: fld_5fc9e9a7a8324ca6a619b0a4f0e8f2d8
+    modified: 1705671804354
+    created: 1705671707893
+    name: Ticket
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1705651989681.875
+    _type: request_group
+  - _id: req_5aec040c6c764908b72164e2062ac90d
+    parentId: fld_2d63446e2f44402cabdd2064d5e627cb
+    modified: 1705671874137
+    created: 1696106588969
+    url: https://localhost:9200/tickets/1
+    name: get ticket by id
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers:
+      - name: User-Agent
+        value: insomnia/8.1.0
+    authentication: {}
+    metaSortKey: -1705671726336
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_43412719410145c79321da7e08d1878b
+    parentId: fld_2d63446e2f44402cabdd2064d5e627cb
+    modified: 1705671726336
+    created: 1696762907618
+    url: https://localhost:9200/tickets
+    name: create ticket
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "name": "Концерт",
+          "coordinates": {
+            "x": 23423,
+            "y": -234
+          },
+          "price": 1,
+          "discount": 0
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/8.1.0
+    authentication: {}
+    metaSortKey: -1705671726286
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_6ab846fd89cb4b409486ec5bfa4d3bbe
+    parentId: fld_2d63446e2f44402cabdd2064d5e627cb
+    modified: 1705671824315
+    created: 1696934082120
+    url: https://localhost:9200/tickets/1
+    name: update ticket by id
+    description: ""
+    method: PUT
+    body:
+      mimeType: application/json
+      text: >
+        {
+          "name": "dsadhasjdsjadhasjdhjdsadhasjdsjadhasjdhjdsadhasjdsjadhasjdhjdsadhasjdsjadhasjdhjdsadhasjdsjadhasjdhjdsadhasjdsjadhasjdhjdsadhasjdsjadhasjdhjdsadhasjdsjadhasjdhjdsadhasjdsjadhasjdhjdsadhasjdsjadhasjdhjdsadhasjdsjadhasjdhjdsadhasjdsjadhasjdhjdsadhasjdsjadhadsadhasjdsjadhasjdhjdsadhasjdsjadhasjdhjdsadhasjdsjadhasjdhjdsadhasjdsjadhasjdhjdsadhasjdsjadhasjdhjdsadhasjdsjadhasjdhjdsadhasjdsjadhasjdhjdsadhasjdsjadhasjdhjdsadhasjdsjadhasjdhjdsadhasjdsjadhasjdhjdsadhasjdsjadhasjdhjdsadhasjdsjadhasjdhjdsadhasjdsjadhadsadhasjdsjadhasjdhjdsadhasjdsjadhasjdhjdsadhasjdsjadhasjdhjdsadhasjdsjadhasjdhjdsadhasjdsjadhasjdhjdsadhasjdsjadhasjdhjdsadhasjdsjadhasjdhjdsadhasjdsjadhasjdhjdsadhasjdsjadhasjdhjdsadhasjdsjadhasjdhjdsadhasjdsjadhasjdhjdsadhasjdsjadhasjdhjdsadhasjdsjadha",
+          "coordinates": {
+            "x": 100,
+            "y": 100
+          },
+          "price": 234.2,
+          "discount": 0,
+          "type": "USUAL"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/8.1.0
+    authentication: {}
+    metaSortKey: -1705671726236
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_d8e19a04681b458bb2e4ae2034ea9f09
+    parentId: fld_2d63446e2f44402cabdd2064d5e627cb
+    modified: 1705671840043
+    created: 1696934062228
+    url: https://localhost:9200/tickets/1
+    name: delete ticket by id
+    description: ""
+    method: DELETE
+    body: {}
+    parameters: []
+    headers:
+      - name: User-Agent
+        value: insomnia/8.1.0
+    authentication: {}
+    metaSortKey: -1705671726211
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_7a15f3d5ac9245af9c83c0dace8cdcf5
+    parentId: fld_3ee0ec6bd8f147aca6402baa118d9702
+    modified: 1705671792118
+    created: 1703153038305
+    url: https://localhost:9200/tickets/min-type
+    name: min ticket type
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers:
+      - name: User-Agent
+        value: insomnia/8.3.0
+    authentication: {}
+    metaSortKey: -1705671786037
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_3ee0ec6bd8f147aca6402baa118d9702
+    parentId: fld_5fc9e9a7a8324ca6a619b0a4f0e8f2d8
+    modified: 1705671799620
+    created: 1705671774485
+    name: Other
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1705651989672.5
+    _type: request_group
+  - _id: req_634bf554734647c7bfbcc367ad1b10d3
+    parentId: fld_3ee0ec6bd8f147aca6402baa118d9702
+    modified: 1705671793586
+    created: 1703152103884
+    url: https://localhost:9200/tickets/unique-types
+    name: tickets unique
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers:
+      - name: User-Agent
+        value: insomnia/8.3.0
+    authentication: {}
+    metaSortKey: -1705671785987
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_e733af63b8f44e38b91d2fe9d76b19ee
+    parentId: fld_3ee0ec6bd8f147aca6402baa118d9702
+    modified: 1705671785986
+    created: 1703153454993
+    url: https://localhost:9200/tickets/name
+    name: ticket substring
+    description: ""
+    method: GET
+    body: {}
+    parameters:
+      - id: pair_20f64562aff64d5b9a9b482b76e7ec7f
+        name: name
+        value: О
+        description: ""
+    headers:
+      - name: User-Agent
+        value: insomnia/8.3.0
+    authentication: {}
+    metaSortKey: -1705671785937
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: env_b76f88e23ed7432d806f338e1071ff00
+    parentId: wrk_9f59ccbe43a94a34b79ef0a5cc5b9bdd
+    modified: 1696106551476
+    created: 1696106551476
+    name: Base Environment
+    data: {}
+    dataPropertyOrder: null
+    color: null
+    isPrivate: false
+    metaSortKey: 1696106551476
+    _type: environment
+  - _id: jar_de85a141e1d446d9a6391efb2c5a9a7e
+    parentId: wrk_9f59ccbe43a94a34b79ef0a5cc5b9bdd
+    modified: 1705672163496
+    created: 1696106551476
+    name: Default Jar
+    cookies:
+      - key: JSESSIONID
+        value: 0626F5ACA6E795BEFA36AAA8BE2F9B70.6deca108afaf
+        domain: localhost
+        path: /
+        hostOnly: true
+        creation: 2023-12-19T12:05:33.211Z
+        lastAccessed: 2024-01-19T13:49:23.496Z
+        id: "953765764534656"
+    _type: cookie_jar
+  - _id: spc_190d292512954ff8b14b7d800b514c55
+    parentId: wrk_9f59ccbe43a94a34b79ef0a5cc5b9bdd
+    modified: 1705672284230
+    created: 1702987256723
+    fileName: soa
+    contents: ""
+    contentType: yaml
+    _type: api_spec

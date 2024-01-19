@@ -23,7 +23,6 @@ public class Event {
     private Long id;
 
     @Column(name = "name")
-    @Lob
     @NonNull
     private String name;
 
