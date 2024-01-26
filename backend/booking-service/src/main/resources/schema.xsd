@@ -26,63 +26,68 @@
         </xs:sequence>
     </xs:complexType>
 
-<!--    <xs:element name="filterOrganizationsByAnnualTurnoverRequest">-->
-<!--        <xs:complexType>-->
-<!--            <xs:sequence>-->
-<!--                <xs:element name="minAnnualTurnover" type="xs:double"/>-->
-<!--                <xs:element name="maxAnnualTurnover" type="xs:double"/>-->
-<!--            </xs:sequence>-->
-<!--        </xs:complexType>-->
-<!--    </xs:element>-->
-<!--    -->
-<!--    <xs:element name="filterOrganizationsByEmployeesCountRequest">-->
-<!--        <xs:complexType>-->
-<!--            <xs:sequence>-->
-<!--                <xs:element name="minEmployeesCount" type="xs:long"/>-->
-<!--                <xs:element name="maxEmployeesCount" type="xs:long"/>-->
-<!--            </xs:sequence>-->
-<!--        </xs:complexType>-->
-<!--    </xs:element>-->
+    <xs:element name="createVipTicketRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="ticketId" type="xs:int"/>
+                <xs:element name="personId" type="xs:int"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
-<!--    <xs:element name="filterOrganizationsByAnnualTurnoverResponse">-->
-<!--        <xs:complexType>-->
-<!--            <xs:sequence>-->
-<!--                <xs:element name="organizations" type="tns:Organization" maxOccurs="unbounded"/>-->
-<!--            </xs:sequence>-->
-<!--        </xs:complexType>-->
-<!--    </xs:element>-->
+    <xs:element name="makeDiscountTicketRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="ticketId" type="xs:int"/>
+                <xs:element name="personId" type="xs:int"/>
+                <xs:element name="discount" type="xs:double"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
-<!--    <xs:element name="filterOrganizationsByEmployeesCountResponse">-->
-<!--        <xs:complexType>-->
-<!--            <xs:sequence>-->
-<!--                <xs:element name="organizations" type="tns:Organization" maxOccurs="unbounded"/>-->
-<!--            </xs:sequence>-->
-<!--        </xs:complexType>-->
-<!--    </xs:element>-->
+    <xs:element name="createVipTicketResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="ticket" type="tns:Ticket" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
-<!--    <xs:complexType name="Organization">-->
-<!--        <xs:sequence>-->
-<!--            <xs:element name="id" type="xs:int"/>-->
-<!--            <xs:element name="name" type="xs:string"/>-->
-<!--            <xs:element name="coordinates" type="tns:Coordinates"/>-->
-<!--            <xs:element name="creationDate" type="xs:dateTime"/>-->
-<!--            <xs:element name="annualTurnover" type="xs:double"/>-->
-<!--            <xs:element name="organizationType" type="xs:string"/>-->
-<!--            <xs:element name="address" type="tns:Address"/>-->
-<!--        </xs:sequence>-->
-<!--    </xs:complexType>-->
-<!--    -->
-<!--    <xs:complexType name="Coordinates">-->
-<!--        <xs:sequence>-->
-<!--            <xs:element name="x" type="xs:double"/>-->
-<!--            <xs:element name="y" type="xs:long"/>-->
-<!--        </xs:sequence>-->
-<!--    </xs:complexType>-->
-<!--    -->
-<!--    <xs:complexType name="Address">-->
-<!--        <xs:sequence>-->
-<!--            <xs:element name="street" type="xs:string"/>-->
-<!--            <xs:element name="zipCode" type="xs:string"/>-->
-<!--        </xs:sequence>-->
-<!--    </xs:complexType>-->
+    <xs:element name="makeDiscountTicketResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="ticket" type="tns:Ticket" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="Ticket">
+        <xs:sequence>
+            <xs:element name="id" type="xs:int"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="coordinates" type="tns:Coordinates"/>
+            <xs:element name="creationDate" type="xs:dateTime"/>
+            <xs:element name="price" type="xs:int"/>
+            <xs:element name="discount" type="xs:double"/>
+            <xs:element name="type" type="xs:string"/>
+            <xs:element name="event" type="tns:Event"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Coordinates">
+        <xs:sequence>
+            <xs:element name="x" type="xs:long"/>
+            <xs:element name="y" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Event">
+        <xs:sequence>
+            <xs:element name="id" type="xs:long"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="date" type="xs:dateTime"/>
+            <xs:element name="minAge" type="xs:long"/>
+            <xs:element name="eventType" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
 </xs:schema>

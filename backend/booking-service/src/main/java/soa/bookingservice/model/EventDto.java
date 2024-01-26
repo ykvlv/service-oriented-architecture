@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Setter
 @Getter
 @Accessors(chain = true)
-public class Event implements Serializable {
+public class EventDto implements Serializable {
     @JsonIgnoreProperties
     private Long id;
     private String name;

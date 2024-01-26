@@ -21,5 +21,5 @@ public class TicketDto implements Serializable {
     private Integer price;
     private Double discount;
     private TicketType type;
-    private Event discipline;
+    private EventDto eventDto;
 }

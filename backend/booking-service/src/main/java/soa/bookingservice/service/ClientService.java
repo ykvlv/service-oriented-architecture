@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import soa.bookingservice.model.TicketDto;
@@ -42,7 +43,7 @@ public class ClientService {
     }
 
     private String getMainServiceUrl() {
-        if (mainServiceUrl.isEmpty()) {
+        if (StringUtils.isEmpty(mainServiceUrl)) {
             return mainServiceUrl1;
         } else {
             return mainServiceUrl;

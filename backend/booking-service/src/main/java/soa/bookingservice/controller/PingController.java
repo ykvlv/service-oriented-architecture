@@ -5,15 +5,24 @@ import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
+import soa.bookingservice.catalog.Coordinates;
+import soa.bookingservice.catalog.CreateVipTicketRequest;
+import soa.bookingservice.catalog.CreateVipTicketResponse;
+import soa.bookingservice.catalog.Event;
 import soa.bookingservice.catalog.GetPingRequest;
 import soa.bookingservice.catalog.GetPingResponse;
+import soa.bookingservice.catalog.MakeDiscountTicketRequest;
+import soa.bookingservice.catalog.MakeDiscountTicketResponse;
 import soa.bookingservice.catalog.PingGetResponseDto;
+import soa.bookingservice.catalog.Ticket;
+import soa.bookingservice.model.CoordinatesDto;
+import soa.bookingservice.model.EventDto;
+import soa.bookingservice.model.TicketDto;
 import soa.bookingservice.service.ClientService;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-import java.util.ArrayList;
 
 
 @Endpoint
@@ -41,72 +50,69 @@ public class PingController {
 
         return response;
     }
-//
-//    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "filterOrganizationsByAnnualTurnoverRequest")
-//    @ResponsePayload
-//    public FilterOrganizationsByAnnualTurnoverResponse filterOrganizationsByAnnualTurnover(@RequestPayload FilterOrganizationsByAnnualTurnoverRequest request) throws DatatypeConfigurationException {
-//        List<OrganizationDTO> organizationDTOS = clientService.getOrganizationsFilteredByAnnualTurnover(
-//                request.getMinAnnualTurnover(), request.getMaxAnnualTurnover()
-//        );
-//
-//        List<Organization> organizationList = new ArrayList<>();
-//        for (OrganizationDTO organizationDTO: organizationDTOS) {
-//            Coordinates coordinates = new Coordinates();
-//            coordinates.setX(organizationDTO.getCoordinatesDTO().getX());
-//            coordinates.setY(organizationDTO.getCoordinatesDTO().getY());
-//            Address address = new Address();
-//            address.setStreet(organizationDTO.getOfficialAddressDTO().getStreet());
-//            address.setZipCode(organizationDTO.getOfficialAddressDTO().getZipCode());
-//            XMLGregorianCalendar xmlGregorianCalendar =
-//                    DatatypeFactory.newInstance().newXMLGregorianCalendar(organizationDTO.getCreationDate().toString());
-//
-//            Organization organization = new Organization();
-//            organization.setId(organizationDTO.getId());
-//            organization.setName(organizationDTO.getName());
-//            organization.setCoordinates(coordinates);
-//            organization.setCreationDate(xmlGregorianCalendar);
-//            organization.setAnnualTurnover(organizationDTO.getAnnualTurnover());
-//            organization.setOrganizationType(organizationDTO.getType().name());
-//            organization.setAddress(address);
-//            organizationList.add(organization);
-//        }
-//
-//        FilterOrganizationsByAnnualTurnoverResponse organizationsResponse = new FilterOrganizationsByAnnualTurnoverResponse();
-//        organizationsResponse.setOrganizations(organizationList);
-//        return organizationsResponse;
-//    }
-//
-//    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "filterOrganizationsByEmployeesCountRequest")
-//    @ResponsePayload
-//    public FilterOrganizationsByEmployeesCountResponse filterOrganizationsByEmployeesCount(@RequestPayload FilterOrganizationsByEmployeesCountRequest request) throws DatatypeConfigurationException {
-//        List<OrganizationDTO> organizationDTOS = clientService.getOrganizationsFilteredByEmployeesCount(
-//                request.getMinEmployeesCount(), request.getMaxEmployeesCount()
-//        );
-//
-//        List<Organization> organizationList = new ArrayList<>();
-//        for (OrganizationDTO organizationDTO: organizationDTOS) {
-//            Coordinates coordinates = new Coordinates();
-//            coordinates.setX(organizationDTO.getCoordinatesDTO().getX());
-//            coordinates.setY(organizationDTO.getCoordinatesDTO().getY());
-//            Address address = new Address();
-//            address.setStreet(organizationDTO.getOfficialAddressDTO().getStreet());
-//            address.setZipCode(organizationDTO.getOfficialAddressDTO().getZipCode());
-//            XMLGregorianCalendar xmlGregorianCalendar =
-//                    DatatypeFactory.newInstance().newXMLGregorianCalendar(organizationDTO.getCreationDate().toString());
-//
-//            Organization organization = new Organization();
-//            organization.setId(organizationDTO.getId());
-//            organization.setName(organizationDTO.getName());
-//            organization.setCoordinates(coordinates);
-//            organization.setCreationDate(xmlGregorianCalendar);
-//            organization.setAnnualTurnover(organizationDTO.getAnnualTurnover());
-//            organization.setOrganizationType(organizationDTO.getType().name());
-//            organization.setAddress(address);
-//            organizationList.add(organization);
-//        }
-//
-//        FilterOrganizationsByEmployeesCountResponse organizationsResponse = new FilterOrganizationsByEmployeesCountResponse();
-//        organizationsResponse.setOrganizations(organizationList);
-//        return organizationsResponse;
-//    }
+
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "createVipTicketRequest")
+    @ResponsePayload
+    public CreateVipTicketResponse createVipTicket(@RequestPayload CreateVipTicketRequest request) throws DatatypeConfigurationException {
+        TicketDto ticketDto = clientService.createVipTicket(
+                request.getTicketId(), request.getPersonId()
+        );
+
+        CreateVipTicketResponse response = new CreateVipTicketResponse();
+        response.setTicket(fillTicket(ticketDto));
+        return response;
+    }
+
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "makeDiscountTicketRequest")
+    @ResponsePayload
+    public MakeDiscountTicketResponse makeDiscountTicket(@RequestPayload MakeDiscountTicketRequest request) throws DatatypeConfigurationException {
+        TicketDto ticketDto = clientService.makeDiscountTicket(
+                request.getTicketId(), request.getPersonId(), request.getDiscount()
+        );
+
+
+        MakeDiscountTicketResponse response = new MakeDiscountTicketResponse();
+        response.setTicket(fillTicket(ticketDto));
+        return response;
+    }
+
+
+    private Ticket fillTicket(TicketDto ticketDto) throws DatatypeConfigurationException {
+        Ticket ticket = new Ticket();
+        ticket.setId(ticketDto.getId());
+        ticket.setName(ticketDto.getName());
+
+        XMLGregorianCalendar xmlGregorianCalendar =
+                DatatypeFactory.newInstance().newXMLGregorianCalendar(ticketDto.getCreationDate().toString());
+        ticket.setCreationDate(xmlGregorianCalendar);
+
+        ticket.setPrice(ticketDto.getPrice());
+        ticket.setDiscount(ticketDto.getDiscount());
+        ticket.setType(String.valueOf(ticketDto.getType()));
+
+        CoordinatesDto coordinatesDto = ticketDto.getCoordinates();
+        Coordinates coordinates = new Coordinates();
+        if (coordinatesDto != null) {
+            coordinates.setX(coordinatesDto.getX());
+            coordinates.setY(coordinates.getY());
+        }
+        ticket.setCoordinates(coordinates);
+
+        EventDto eventDto = ticketDto.getEventDto();
+        Event event = new Event();
+        if (eventDto != null) {
+            event.setId(eventDto.getId());
+            event.setName(eventDto.getName());
+
+            XMLGregorianCalendar xmlGregorianCalendar2 =
+                    DatatypeFactory.newInstance().newXMLGregorianCalendar(eventDto.getDate().toString());
+            event.setDate(xmlGregorianCalendar2);
+
+            event.setMinAge(eventDto.getMinAge());
+            event.setEventType(String.valueOf(eventDto.getEventType()));
+        }
+        ticket.setEvent(event);
+
+        return ticket;
+    }
 }
