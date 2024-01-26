@@ -20,23 +20,8 @@ services:
       dockerfile: Dockerfile
     depends_on:
       - database_postgres
-    environment:
-      - RUNNING_PORT=9099
     ports:
       - '9099:9099'
-    networks:
-      - backend-network
-
-  duplicate-ticket-service:
-    build:
-      context: ticket-service
-      dockerfile: Dockerfile
-    depends_on:
-      - database_postgres
-    environment:
-      - RUNNING_PORT=9199
-    ports:
-      - '9199:9199'
     networks:
       - backend-network
 
@@ -45,47 +30,9 @@ services:
       context: booking-service
       dockerfile: Dockerfile
     environment:
-      - MAIN_SERVICE_URL=https://haproxy:9200
+      - MAIN_SERVICE_URL=https://localhost:9099
     ports:
       - '9100:9100'
-    networks:
-      - backend-network
-
-  duplicate-booking-service:
-    build:
-      context: booking-service
-      dockerfile: Dockerfile
-    environment:
-      - MAIN_SERVICE_URL=https://haproxy:9200
-    ports:
-      - '9102:9100'
-    networks:
-      - backend-network
-
-  haproxy:
-    image: "haproxy:2.7"
-    user: root
-    ports:
-      - '9200:9200'
-      - '9202:9202'
-      - '8404:8404'
-    volumes:
-      - ./ticket-service/src/main/resources/keystore/orgdirectory.pem:/etc/ssl/certs/orgdirectory.pem
-      - ./ticket-service/src/main/resources/keystore/org_cert_origin.pem:/etc/ssl/certs/org_cert_origin.pem
-      - ./booking-service/service/src/main/resources/keystore/2service.pem:/etc/ssl/certs/second_service.pem
-      - ./booking-service/service/src/main/resources/keystore/2serv_cert_origin.pem:/etc/ssl/certs/serv_cert_origin.pem
-      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
-    networks:
-      - backend-network
-
-  consul:
-    image: consul:1.9.3
-    ports:
-      - '8500:8500'
-      - '8600:8600/udp'
-    volumes:
-      - ./consul.config.json:/etc/consul.d/consul.config.json
-    command: consul agent -dev -config-dir /etc/consul.d
     networks:
       - backend-network
 

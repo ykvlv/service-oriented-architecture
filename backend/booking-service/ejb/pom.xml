@@ -4,7 +4,7 @@
     <parent>
         <artifactId>booking-service</artifactId>
         <groupId>soa</groupId>
-        <version>3.0.0</version>
+        <version>4.0.0</version>
     </parent>
 
     <artifactId>ejb</artifactId>

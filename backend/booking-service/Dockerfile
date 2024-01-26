@@ -10,7 +10,7 @@ CMD ["/opt/jboss/wildfly/bin/standalone.sh", "-b", "0.0.0.0", "-bmanagement", "0
 
 
 # Закидываем war и jar для того чтобы, wildfly при запуске их развернул автоматически
-COPY ejb/target/ejb-3.0.0.jar /opt/jboss/wildfly/standalone/deployments/
+COPY ejb/target/ejb-4.0.0.jar /opt/jboss/wildfly/standalone/deployments/
 COPY service/target/service.war /opt/jboss/wildfly/standalone/deployments/
 
 EXPOSE 9990 9100
