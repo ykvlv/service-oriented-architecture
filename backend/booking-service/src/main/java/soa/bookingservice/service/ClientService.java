@@ -57,10 +57,7 @@ public class ClientService {
         String url = getMainServiceUrl() + "/tickets/vip/" + ticketId;
         URI uri = buildURIWithIntervals(url);
 
-        ResponseEntity<TicketDto> response = restTemplate.exchange(uri, HttpMethod.POST,
-                new HttpEntity<>(headers), TicketDto.class);
-
-        return Objects.requireNonNull(response.getBody());
+        return catchAnyException(uri, headers);
     }
 
     public TicketDto makeDiscountTicket(Integer ticketId, Integer personId, Double discount) {
@@ -70,9 +67,18 @@ public class ClientService {
         String url = getMainServiceUrl() + "/tickets/discount/" + ticketId + "/" + discount;
         URI uri = buildURIWithIntervals(url);
 
-        ResponseEntity<TicketDto> response = restTemplate.exchange(uri, HttpMethod.POST,
-                new HttpEntity<>(headers), TicketDto.class);
+        return catchAnyException(uri, headers);
+    }
 
-        return Objects.requireNonNull(response.getBody());
+    private TicketDto catchAnyException(URI uri, MultiValueMap<String, String> headers) {
+        try {
+            ResponseEntity<TicketDto> response = restTemplate.exchange(uri, HttpMethod.POST,
+                    new HttpEntity<>(headers), TicketDto.class);
+            return Objects.requireNonNull(response.getBody());
+        } catch (Exception e) {
+            String formatted = e.getMessage().substring(7, e.getMessage().length() - 1);
+
+            throw new RuntimeException(formatted);
+        }
     }
 }

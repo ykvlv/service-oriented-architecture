@@ -69,7 +69,7 @@
             <xs:element name="creationDate" type="xs:dateTime"/>
             <xs:element name="price" type="xs:int"/>
             <xs:element name="discount" type="xs:double"/>
-            <xs:element name="type" type="xs:string"/>
+            <xs:element name="ticketType" type="xs:string"/>
             <xs:element name="event" type="tns:Event"/>
         </xs:sequence>
     </xs:complexType>

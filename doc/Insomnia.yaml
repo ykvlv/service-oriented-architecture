@@ -1,14 +1,14 @@
 _type: export
 __export_format: 4
-__export_date: 2024-01-19T13:51:39.376Z
+__export_date: 2024-02-07T13:52:42.778Z
 __export_source: insomnia.desktop.app:v8.3.0
 resources:
-  - _id: req_e0520ce8ef1e4e85819c89fdb05a0110
-    parentId: fld_c8486b243a82490b9185004c33210769
-    modified: 1705672080665
-    created: 1705672051620
-    url: https://localhost:9202/booking/sell/discount/10007/1/10
-    name: create discounted ticket
+  - _id: req_d7cf5dc158bb4f238025db19257ef69e
+    parentId: fld_808299693e72413b9459d020636517d4
+    modified: 1707308933317
+    created: 1706258580415
+    url: https://localhost:9101/booking/sell/vip/1/1
+    name: create vip ticket
     description: ""
     method: POST
     body: {}
@@ -17,7 +17,7 @@ resources:
       - name: User-Agent
         value: insomnia/8.3.0
     authentication: {}
-    metaSortKey: -1705672051620
+    metaSortKey: -1706258580415
     isPrivate: false
     settingStoreCookies: true
     settingSendCookies: true
@@ -26,6 +26,16 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
+  - _id: fld_808299693e72413b9459d020636517d4
+    parentId: fld_c8486b243a82490b9185004c33210769
+    modified: 1706258533672
+    created: 1706258533672
+    name: REST
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1706258533672
+    _type: request_group
   - _id: fld_c8486b243a82490b9185004c33210769
     parentId: wrk_9f59ccbe43a94a34b79ef0a5cc5b9bdd
     modified: 1705671913675
@@ -44,19 +54,144 @@ resources:
     description: ""
     scope: design
     _type: workspace
-  - _id: req_8429ce5c08a04917bf1327af298ba2a5
-    parentId: fld_c8486b243a82490b9185004c33210769
-    modified: 1705672030475
-    created: 1699187719751
-    url: https://localhost:9202/booking/sell/vip/10007/1
-    name: create vip ticket
+  - _id: req_c8e7593b30bb458e9d5d43c3f6193ff6
+    parentId: fld_808299693e72413b9459d020636517d4
+    modified: 1707309508499
+    created: 1706258536401
+    url: https://localhost:9101/booking/sell/discount/1/2/3
+    name: make discount ticket
     description: ""
     method: POST
     body: {}
     parameters: []
     headers:
       - name: User-Agent
-        value: insomnia/8.1.0
+        value: insomnia/8.3.0
+    authentication: {}
+    metaSortKey: -1706258536401
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_6719194bdc564b779992a6fddf9fa6da
+    parentId: fld_c8486b243a82490b9185004c33210769
+    modified: 1706255881030
+    created: 1706250876917
+    url: https://localhost:9100/ws/getPingRequest
+    name: ping
+    description: ""
+    method: POST
+    body:
+      mimeType: application/xml
+      text: >-
+        <soapenv:Envelope
+        xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+        xmlns:cat="http://soa/bookingservice/catalog">
+           <soapenv:Header/>
+           <soapenv:Body>
+              <cat:getPingRequest>
+                 <cat:id>1</cat:id>
+              </cat:getPingRequest>
+           </soapenv:Body>
+        </soapenv:Envelope>
+    parameters: []
+    headers: []
+    authentication: {}
+    metaSortKey: -1705672051820
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_65140d4018494a97a6e46eb784930390
+    parentId: fld_c8486b243a82490b9185004c33210769
+    modified: 1706250853860
+    created: 1706250742827
+    url: https://localhost:9100/ws/schema.wsdl
+    name: getWSDL
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers:
+      - name: User-Agent
+        value: insomnia/8.3.0
+    authentication: {}
+    metaSortKey: -1705672051720
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_e0520ce8ef1e4e85819c89fdb05a0110
+    parentId: fld_c8486b243a82490b9185004c33210769
+    modified: 1707307235608
+    created: 1705672051620
+    url: https://localhost:9100/ws/createVipTicketRequest
+    name: create vip ticket
+    description: ""
+    method: POST
+    body:
+      mimeType: application/xml
+      text: >-
+        <soapenv:Envelope
+        xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+        xmlns:cat="http://soa/bookingservice/catalog">
+           <soapenv:Header/>
+           <soapenv:Body>
+              <cat:createVipTicketRequest>
+                 <cat:ticketId>1</cat:ticketId>
+                 <cat:personId>1</cat:personId>
+              </cat:createVipTicketRequest>
+           </soapenv:Body>
+        </soapenv:Envelope>
+    parameters: []
+    headers: []
+    authentication: {}
+    metaSortKey: -1705672051620
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_8429ce5c08a04917bf1327af298ba2a5
+    parentId: fld_c8486b243a82490b9185004c33210769
+    modified: 1707307233333
+    created: 1699187719751
+    url: https://localhost:9100/ws/makeDiscountTicketRequest
+    name: make discount ticket
+    description: ""
+    method: POST
+    body:
+      mimeType: application/xml
+      text: >-
+        <soapenv:Envelope
+        xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+        xmlns:cat="http://soa/bookingservice/catalog">
+           <soapenv:Header/>
+           <soapenv:Body>
+              <cat:makeDiscountTicketRequest>
+                 <cat:ticketId>1</cat:ticketId>
+                 <cat:personId>2</cat:personId>
+                 <cat:discount>3</cat:discount>
+              </cat:makeDiscountTicketRequest>
+           </soapenv:Body>
+        </soapenv:Envelope>
+    parameters: []
+    headers: []
     authentication: {}
     metaSortKey: -1705671925288
     isPrivate: false
@@ -69,9 +204,9 @@ resources:
     _type: request
   - _id: req_ffa08fefb1114fd88aab71e82aab0efc
     parentId: fld_5fc9e9a7a8324ca6a619b0a4f0e8f2d8
-    modified: 1705671700473
+    modified: 1707313911222
     created: 1705651962991
-    url: https://localhost:9200/ping
+    url: https://localhost:9099/ping
     name: ping
     description: ""
     method: POST
@@ -102,9 +237,9 @@ resources:
     _type: request_group
   - _id: req_15826b9cd3f2468b8e1adb1eb4a99e45
     parentId: fld_fc8cf4ced58e46a1819e85ffde73deda
-    modified: 1705671856551
+    modified: 1707313914403
     created: 1696765658438
-    url: https://localhost:9200/events
+    url: https://localhost:9099/events
     name: get all events
     description: ""
     method: GET
@@ -160,9 +295,9 @@ resources:
     _type: request_group
   - _id: req_e0a472e2ea554afeaf9acab01a88f26b
     parentId: fld_fc8cf4ced58e46a1819e85ffde73deda
-    modified: 1705671872361
+    modified: 1707313916740
     created: 1696765628027
-    url: https://localhost:9200/events/1
+    url: https://localhost:9099/events/1
     name: get event by id
     description: ""
     method: GET
@@ -183,9 +318,9 @@ resources:
     _type: request
   - _id: req_2519ffc6ebcb467cbfcead4836f103b6
     parentId: fld_fc8cf4ced58e46a1819e85ffde73deda
-    modified: 1705671692243
+    modified: 1707313919959
     created: 1696765523521
-    url: https://localhost:9200/events
+    url: https://localhost:9099/events
     name: create event
     description: ""
     method: POST
@@ -216,9 +351,9 @@ resources:
     _type: request
   - _id: req_c205480dbb2940ab840571316d2b3606
     parentId: fld_fc8cf4ced58e46a1819e85ffde73deda
-    modified: 1705671866808
+    modified: 1707313921975
     created: 1696934123335
-    url: https://localhost:9200/events/1
+    url: https://localhost:9099/events/1
     name: update event by id
     description: ""
     method: PUT
@@ -249,9 +384,9 @@ resources:
     _type: request
   - _id: req_1422fc4e2dd341b68c1722bb4842c89e
     parentId: fld_fc8cf4ced58e46a1819e85ffde73deda
-    modified: 1705671887668
+    modified: 1707313923948
     created: 1696798807275
-    url: https://localhost:9200/events/1
+    url: https://localhost:9099/events/1
     name: delete event by id
     description: ""
     method: DELETE
@@ -276,9 +411,9 @@ resources:
     _type: request
   - _id: req_675c8d47db36465cbe47ffe78df62698
     parentId: fld_2d63446e2f44402cabdd2064d5e627cb
-    modified: 1705671765519
+    modified: 1707313926047
     created: 1696765514564
-    url: https://localhost:9200/tickets
+    url: https://localhost:9099/tickets
     name: get all tickets
     description: ""
     method: GET
@@ -349,9 +484,9 @@ resources:
     _type: request_group
   - _id: req_5aec040c6c764908b72164e2062ac90d
     parentId: fld_2d63446e2f44402cabdd2064d5e627cb
-    modified: 1705671874137
+    modified: 1707313928378
     created: 1696106588969
-    url: https://localhost:9200/tickets/1
+    url: https://localhost:9099/tickets/1
     name: get ticket by id
     description: ""
     method: GET
@@ -372,9 +507,9 @@ resources:
     _type: request
   - _id: req_43412719410145c79321da7e08d1878b
     parentId: fld_2d63446e2f44402cabdd2064d5e627cb
-    modified: 1705671726336
+    modified: 1707313930267
     created: 1696762907618
-    url: https://localhost:9200/tickets
+    url: https://localhost:9099/tickets
     name: create ticket
     description: ""
     method: POST
@@ -408,9 +543,9 @@ resources:
     _type: request
   - _id: req_6ab846fd89cb4b409486ec5bfa4d3bbe
     parentId: fld_2d63446e2f44402cabdd2064d5e627cb
-    modified: 1705671824315
+    modified: 1707313932348
     created: 1696934082120
-    url: https://localhost:9200/tickets/1
+    url: https://localhost:9099/tickets/1
     name: update ticket by id
     description: ""
     method: PUT
@@ -445,9 +580,9 @@ resources:
     _type: request
   - _id: req_d8e19a04681b458bb2e4ae2034ea9f09
     parentId: fld_2d63446e2f44402cabdd2064d5e627cb
-    modified: 1705671840043
+    modified: 1707313934561
     created: 1696934062228
-    url: https://localhost:9200/tickets/1
+    url: https://localhost:9099/tickets/1
     name: delete ticket by id
     description: ""
     method: DELETE
@@ -468,9 +603,9 @@ resources:
     _type: request
   - _id: req_7a15f3d5ac9245af9c83c0dace8cdcf5
     parentId: fld_3ee0ec6bd8f147aca6402baa118d9702
-    modified: 1705671792118
+    modified: 1707313937227
     created: 1703153038305
-    url: https://localhost:9200/tickets/min-type
+    url: https://localhost:9099/tickets/min-type
     name: min ticket type
     description: ""
     method: GET
@@ -501,9 +636,9 @@ resources:
     _type: request_group
   - _id: req_634bf554734647c7bfbcc367ad1b10d3
     parentId: fld_3ee0ec6bd8f147aca6402baa118d9702
-    modified: 1705671793586
+    modified: 1707313939160
     created: 1703152103884
-    url: https://localhost:9200/tickets/unique-types
+    url: https://localhost:9099/tickets/unique-types
     name: tickets unique
     description: ""
     method: GET
@@ -524,9 +659,9 @@ resources:
     _type: request
   - _id: req_e733af63b8f44e38b91d2fe9d76b19ee
     parentId: fld_3ee0ec6bd8f147aca6402baa118d9702
-    modified: 1705671785986
+    modified: 1707313941356
     created: 1703153454993
-    url: https://localhost:9200/tickets/name
+    url: https://localhost:9099/tickets/name
     name: ticket substring
     description: ""
     method: GET
@@ -562,18 +697,18 @@ resources:
     _type: environment
   - _id: jar_de85a141e1d446d9a6391efb2c5a9a7e
     parentId: wrk_9f59ccbe43a94a34b79ef0a5cc5b9bdd
-    modified: 1705672163496
+    modified: 1706254748620
     created: 1696106551476
     name: Default Jar
     cookies:
       - key: JSESSIONID
-        value: 0626F5ACA6E795BEFA36AAA8BE2F9B70.6deca108afaf
+        value: 0626F5ACA6E795BEFA36AAA8BE2F9B70.eaee0b9674e7
         domain: localhost
         path: /
         hostOnly: true
         creation: 2023-12-19T12:05:33.211Z
-        lastAccessed: 2024-01-19T13:49:23.496Z
-        id: "953765764534656"
+        lastAccessed: 2024-01-26T07:39:08.619Z
+        id: "18919399625015654"
     _type: cookie_jar
   - _id: spc_190d292512954ff8b14b7d800b514c55
     parentId: wrk_9f59ccbe43a94a34b79ef0a5cc5b9bdd

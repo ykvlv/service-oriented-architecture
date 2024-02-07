@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
+	  xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	  xmlns:wsc="http://www.mulesoft.org/schema/mule/wsc"
+	  xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	  xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/wsc http://www.mulesoft.org/schema/mule/wsc/current/mule-wsc.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="19bf1826-06c5-4a48-bc8a-e7ae0a93da9b" >
+		<http:listener-connection host="localhost" port="9101" protocol="HTTPS">
+			<tls:context >
+				<tls:key-store type="PKCS12" path="baeldung.p12" keyPassword="password" password="password" />
+			</tls:context>
+		</http:listener-connection>
+	</http:listener-config>
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="e0ebacca-7079-4723-8940-4ac394eb495c" >
+		<http:request-connection tlsContext="TLS_Context" protocol="HTTPS">
+		</http:request-connection>
+	</http:request-config>
+
+	<tls:context name="TLS_Context" doc:name="TLS Context" doc:id="c96bce52-2791-4184-a460-d608240741b7" >
+		<tls:trust-store path="baeldung.p12" password="password" type="PKCS12" insecure="true"/>
+	</tls:context>
+	<wsc:config name="Web_Service_Consumer_Config" doc:name="Web Service Consumer Config" doc:id="8923beeb-7acf-422a-9c39-754d3ee673ba" >
+		<wsc:connection wsdlLocation="https://localhost:9100/ws/schema.wsdl" service="SchemaPortService" port="SchemaPortSoap11" address="https://localhost:9100/ws" >
+			<wsc:custom-transport-configuration >
+				<wsc:http-transport-configuration requesterConfig="HTTP_Request_configuration" />
+			</wsc:custom-transport-configuration>
+			<wsc:web-service-security actor="https://schemas.xmlsoap.org/soap/actor/next" />
+		</wsc:connection>
+	</wsc:config>
+
+
+	<flow name="create-vip-ticket" doc:id="fe8a0e70-e2bc-4964-80ff-2482307b6afc" >
+		<http:listener doc:name="Listener" doc:id="cf04ffc7-fb3d-488a-82d6-505e38f92af4" config-ref="HTTP_Listener_config" path="/booking/sell/vip/{ticketId}/{personId}" allowedMethods="POST">
+			<http:response >
+				<http:headers ><![CDATA[#[output application/java
+---
+{
+ "Access-Control-Allow-Origin"  : "*",
+ "Access-Control-Allow-Methods" : "GET, PUT, POST, DELETE, HEAD, OPTIONS",
+ "Access-Control-Allow-Headers" : "*"
+}]]]></http:headers>
+			</http:response>
+		</http:listener>
+		<ee:transform doc:name="Transform Message" doc:id="43fcfcec-04d8-443f-8b90-f45770e11c9e" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+ns ns0 http://soa/bookingservice/catalog
+---
+ns0#createVipTicketRequest: {
+  ns0#ticketId: attributes.uriParams.'ticketId',
+  ns0#personId: attributes.uriParams.'personId'
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<wsc:consume doc:name="Consume" doc:id="3afe2115-643b-484e-bf1f-9d0ec303f795" config-ref="Web_Service_Consumer_Config" operation="createVipTicket"/>
+		<ee:transform doc:name="Transform Message" doc:id="8f523a4a-a0b7-4366-b2b3-c75aca5cdde3" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+ns ns0 http://soa/bookingservice/catalog
+---
+{
+  "id": payload.body.ns0#createVipTicketResponse.ns0#ticket.ns0#id,
+  "name": payload.body.ns0#createVipTicketResponse.ns0#ticket.ns0#name,
+  "coordinates": {
+    "x": payload.body.ns0#createVipTicketResponse.ns0#ticket.ns0#coordinates.ns0#x,
+    "y": payload.body.ns0#createVipTicketResponse.ns0#ticket.ns0#coordinates.ns0#y
+  },
+  "creationDate": payload.body.ns0#createVipTicketResponse.ns0#ticket.ns0#creationDate,
+  "price": payload.body.ns0#createVipTicketResponse.ns0#ticket.ns0#price,
+  "discount": payload.body.ns0#createVipTicketResponse.ns0#ticket.ns0#discount,
+  "type": payload.body.ns0#createVipTicketResponse.ns0#ticket.ns0#ticketType,
+  "event": {
+    "id": payload.body.ns0#createVipTicketResponse.ns0#ticket.ns0#event.ns0#id,
+    "name": payload.body.ns0#createVipTicketResponse.ns0#ticket.ns0#event.ns0#name,
+    "date": payload.body.ns0#createVipTicketResponse.ns0#ticket.ns0#event.ns0#date,
+    "minAge": payload.body.ns0#createVipTicketResponse.ns0#ticket.ns0#event.ns0#minAge,
+    "eventType": payload.body.ns0#createVipTicketResponse.ns0#ticket.ns0#event.ns0#eventType
+  }
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+
+
+
+
+
+
+	<flow name="make_discount_ticket" doc:id="4194fd46-e755-4ec0-8b93-0a14c55698cb" >
+		<http:listener doc:name="Listener" doc:id="e3048fc1-e185-48e4-a9ef-dcfd8663cea3" config-ref="HTTP_Listener_config" path="/booking/sell/discount/{ticketId}/{personId}/{discount}" allowedMethods="POST">
+			<http:response >
+				<http:headers ><![CDATA[#[output application/java
+---
+{
+ "Access-Control-Allow-Origin"  : "*",
+ "Access-Control-Allow-Methods" : "GET, PUT, POST, DELETE, HEAD, OPTIONS",
+ "Access-Control-Allow-Headers" : "*"
+}]]]></http:headers>
+			</http:response>
+		</http:listener>
+		<ee:transform doc:name="Transform Message" doc:id="b5da644e-3739-432b-a92d-56e1caf0c3a8" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+ns ns0 http://soa/bookingservice/catalog
+---
+{
+  ns0#makeDiscountTicketRequest: {
+    ns0#ticketId: attributes.uriParams.'ticketId',
+    ns0#personId: attributes.uriParams.'personId',
+    ns0#discount: attributes.uriParams.'discount'
+  }
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<wsc:consume doc:name="Consume" doc:id="749e0c9c-497a-4777-9a4c-afb4616b8c57" config-ref="Web_Service_Consumer_Config" operation="makeDiscountTicket"/>
+		<ee:transform doc:name="Transform Message" doc:id="4a0f7ef9-8ae6-4db3-a315-d53a49f65268" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+ns ns0 http://soa/bookingservice/catalog
+---
+{
+  "id": payload.body.ns0#createVipTicketResponse.ns0#ticket.ns0#id,
+  "name": payload.body.ns0#createVipTicketResponse.ns0#ticket.ns0#name,
+  "coordinates": {
+    "x": payload.body.ns0#createVipTicketResponse.ns0#ticket.ns0#coordinates.ns0#x,
+    "y": payload.body.ns0#createVipTicketResponse.ns0#ticket.ns0#coordinates.ns0#y
+  },
+  "creationDate": payload.body.ns0#createVipTicketResponse.ns0#ticket.ns0#creationDate,
+  "price": payload.body.ns0#createVipTicketResponse.ns0#ticket.ns0#price,
+  "discount": payload.body.ns0#createVipTicketResponse.ns0#ticket.ns0#discount,
+  "type": payload.body.ns0#createVipTicketResponse.ns0#ticket.ns0#ticketType,
+  "event": {
+    "id": payload.body.ns0#createVipTicketResponse.ns0#ticket.ns0#event.ns0#id,
+    "name": payload.body.ns0#createVipTicketResponse.ns0#ticket.ns0#event.ns0#name,
+    "date": payload.body.ns0#createVipTicketResponse.ns0#ticket.ns0#event.ns0#date,
+    "minAge": payload.body.ns0#createVipTicketResponse.ns0#ticket.ns0#event.ns0#minAge,
+    "eventType": payload.body.ns0#createVipTicketResponse.ns0#ticket.ns0#event.ns0#eventType
+  }
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="soa-lab-4Flow" doc:id="4fe36767-1c58-47f0-9b00-f8385d461323" >
+		<http:listener doc:name="Listener" doc:id="faefad32-21dc-481e-98db-8c9dd80891b7" config-ref="HTTP_Listener_config" path="/booking/sell/vip" allowedMethods="OPTIONS" >
+			<http:response >
+				<http:headers ><![CDATA[#[output application/java
+---
+{
+ "Access-Control-Allow-Origin"  : "*",
+ "Access-Control-Allow-Methods" : "GET, PUT, POST, DELETE, HEAD, OPTIONS",
+ "Access-Control-Allow-Headers" : "*"
+}]]]></http:headers>
+			</http:response>
+		</http:listener>
+		<ee:transform doc:name="Transform Message" doc:id="a6a6deb0-de8d-42ab-9faa-94207d251821" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="soa-lab-4Flow1" doc:id="bd4739e0-00ab-451e-8d9c-e491787d3928" >
+		<http:listener doc:name="Listener" doc:id="c2e08cfe-9006-46b2-965e-aa4e5626fc85" config-ref="HTTP_Listener_config" path="/booking/sell/discount" allowedMethods="OPTIONS">
+			<http:response >
+				<http:headers ><![CDATA[#[output application/java
+---
+{
+ "Access-Control-Allow-Origin"  : "*",
+ "Access-Control-Allow-Methods" : "GET, PUT, POST, DELETE, HEAD, OPTIONS",
+ "Access-Control-Allow-Headers" : "*"
+}]]]></http:headers>
+			</http:response>
+		</http:listener>
+		<ee:transform doc:name="Transform Message" doc:id="4e46e74f-ab32-430c-b971-abe7849cc0f5" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

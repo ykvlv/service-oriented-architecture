@@ -88,7 +88,7 @@ public class PingController {
 
         ticket.setPrice(ticketDto.getPrice());
         ticket.setDiscount(ticketDto.getDiscount());
-        ticket.setType(String.valueOf(ticketDto.getType()));
+        ticket.setTicketType(String.valueOf(ticketDto.getType()));
 
         CoordinatesDto coordinatesDto = ticketDto.getCoordinates();
         Coordinates coordinates = new Coordinates();
