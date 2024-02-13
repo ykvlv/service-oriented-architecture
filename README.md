@@ -2,16 +2,10 @@
 
 ## Бэкенд
 
-Собрать
+Запускать сервисы через
 
 ```shell
-mvn clean install
-```
-
-Запустить все сервисы
-
-```shell
-docker compose up
+mvn spring-boot:run
 ```
 
 Обращение к сервисам
@@ -44,8 +38,6 @@ rsync -av -e "ssh -p 2222" ./public/ s311727@se.ifmo.ru:~/public_html/soa/
 
 ## Mule ESB
 
-[mule-booking-service.xml](mule-booking-service/src/main/mule/mule-booking-service.xml)
-
 Скачиваем Mule Standalone с официального сайта, запускаем
 
 ```shell
@@ -59,3 +51,4 @@ export MULE_HOME=/Users/ykvlv/Downloads/mule-enterprise-standalone-4.5.2/
 mvn clean deploy -DmuleDeploy
 ```
 
+Конфигурация находится в [mule-booking-service.xml](mule-booking-service/src/main/mule/mule-booking-service.xml). Сервис поднимается на порту 9101
