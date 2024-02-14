@@ -1,0 +1,93 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="http://soa/bookingservice/catalog"
+           targetNamespace="http://soa/bookingservice/catalog"
+           elementFormDefault="qualified">
+
+    <!--  Get Ping (only one)  -->
+    <xs:element name="getPingRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:long" minOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getPingResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="ping" type="tns:PingGetResponseDto" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="PingGetResponseDto">
+        <xs:sequence>
+            <xs:element name="id" type="xs:long" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="createVipTicketRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="ticketId" type="xs:int"/>
+                <xs:element name="personId" type="xs:int"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="makeDiscountTicketRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="ticketId" type="xs:int"/>
+                <xs:element name="personId" type="xs:int"/>
+                <xs:element name="discount" type="xs:double"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="createVipTicketResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="ticket" type="tns:Ticket" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="makeDiscountTicketResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="ticket" type="tns:Ticket" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="Ticket">
+        <xs:sequence>
+            <xs:element name="id" type="xs:int"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="coordinates" type="tns:Coordinates"/>
+            <xs:element name="creationDate" type="xs:dateTime"/>
+            <xs:element name="price" type="xs:int"/>
+            <xs:element name="discount" type="xs:double"/>
+            <xs:element name="ticketType" type="xs:string"/>
+            <xs:element name="event" type="tns:Event"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Coordinates">
+        <xs:sequence>
+            <xs:element name="x" type="xs:long"/>
+            <xs:element name="y" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Event">
+        <xs:sequence>
+            <xs:element name="id" type="xs:long"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="date" type="xs:dateTime"/>
+            <xs:element name="minAge" type="xs:long"/>
+            <xs:element name="eventType" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
